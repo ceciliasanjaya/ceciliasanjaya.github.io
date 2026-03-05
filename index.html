@@ -127,10 +127,12 @@
       .nav-links .btn-email { font-size: 12px; padding: 6px 10px; }
     }
     @media (max-width: 480px) {
+      /* Container padding */
+      .container { padding-left: 20px; padding-right: 20px; }
       /* Hero */
       .hero { padding: 40px 0 36px; }
       .hero-wrap { gap: 20px; }
-      .hero-main h1 { font-size: 20px; }
+      .hero-main h1 { font-size: 22px; }
       .hero-main .sub { font-size: 13px; }
       /* Section terminals */
       .sec-terminal { padding: 14px 16px; }
@@ -293,8 +295,17 @@
       .edu-inline { grid-column: 1 / -1; max-width: 100%; }
     }
     @media (max-width: 600px) {
-      .hero-wrap { grid-template-columns: 1fr; }
-      .avatar { width: 80px; height: 80px; }
+      .hero-wrap {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      .avatar { width: 96px; height: 96px; border-radius: 20px; }
+      .hero-main { width: 100%; text-align: left; }
+      .hero-main h1 { font-size: clamp(22px, 6vw, 32px); }
+      .hero-main .sub { max-width: 100%; font-size: 14px; }
+      .actions { justify-content: flex-start; }
+      .edu-inline { max-width: 100%; width: 100%; }
     }
 
     /* ====== Sections ====== */
