@@ -3,271 +3,418 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cecilia Sanjaya — Portfolio</title>
-  <meta name="description" content="Portfolio of Cecilia Sanjaya — projects, experience, and contact information." />
-
-  <!-- Theme colors for browser -->
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Cecilia Sanjaya</title>
+  <meta name="description" content="Portfolio of Cecilia Sanjaya — EE & CS at UC Berkeley." />
+  <meta name="theme-color" content="#080c14">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* ====== Base Variables ====== */
     :root {
-      --fg: #0f172a;
-      --muted: #475569;
-      --bg: #ffffff;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --accent: #2563eb;
-      --radius: 16px;
-      --shadow: 0 6px 24px rgba(16,24,40,.08);
-      --maxw: 980px;
+      --bg: #000000;
+      --surface: #080808;
+      --card: #0c0c0c;
+      --border: rgba(41,121,255,0.14);
+      --border-hover: rgba(41,121,255,0.4);
+      --fg: #ffffff;
+      --muted: #5a5a72;
+      --accent: #2979ff;
+      --accent2: #a78bfa;
+      --green: #00e676;
+      --radius: 10px;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+      --glow: 0 0 24px rgba(41,121,255,0.15);
+      --maxw: 1100px;
     }
 
-    /* ===== About Section ===== */
-    #about {
-      max-width: 800px;
-      margin: 0 auto;
-      padding-top: 32px;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle, rgba(41,121,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
     }
-    
-    #about p {
-      font-size: 0.85rem;              /*  slightly smaller text */
-      line-height: 1.6;                /* improves readability */
-      color: var(--muted);             /* uses your existing faded text color */
-      margin-bottom: 14px;
-    }
-    
-    
-    #about h2 {
-      margin-bottom: 18px;
-    }
-
-    /* Make each project card a column layout */
-    .card{
-      display:flex;
-      flex-direction:column;
-    }
-
-    /* --- Flashcard (only the description area) --- */
-    .flashcard{
-      position: relative;
-      perspective: 900px;          /* enables 3D flip */
-      border-radius: 12px;
-      overflow: hidden;            /* keep corners tidy */
-      cursor: pointer;
-      user-select: none;
-      margin-top: 8px;
-      height: 140px
-    }
-    
-    .flash-inner{
-      position: relative;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform .55s cubic-bezier(.22,.61,.36,1);
-    }
-    
-    .flashcard.is-flipped .flash-inner{
-      transform: rotateY(180deg);
-    }
-    
-    .flash-face{
-      background: color-mix(in srgb, var(--card) 85%, transparent);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      position: absolute;
-      inset: 0;
-      overflow: auto;
-    
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      display: grid;
-      align-content: start;
-      gap: 8px;
-    
-      backface-visibility: hidden; /* crucial for flipping */
-      -webkit-backface-visibility: hidden;
-    }
-    
-    .flash-face.front { transform: rotateY(0); }
-    .flash-face.back  { transform: rotateY(180deg); position: absolute; inset: 0; }
-    
-    .flash-hint,
-    .flip-hint{
-      font-size: 12px;
-      color: var(--muted);
-      opacity: .75;
-    }
-    
-    /* Optional: subtle raise on hover (desktop only) */
-    @media (hover:hover){
-      .flashcard:hover .flash-face{ box-shadow: 0 10px 30px rgba(0,0,0,.12); }
-    }
-    
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .flash-inner{ transition: none; }
-    }
-    
-    /* Buttons row: allow wrapping + spacing */
-    .project-links{
-      display:flex;
-      flex-wrap:wrap;      /*  key: no overlap */
-      gap:12px;            /* space between buttons on wrap */
-      margin-top:12px;
-      /* If you want buttons to stick to the bottom of the card: */
-      /* margin-top:auto;  */
-    }
-    
-    /* Keep buttons readable when narrow */
-    .btn.small{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:6px 14px;
-      font-size:0.9rem;
-      border-radius:8px;
-      white-space:nowrap;  /* keeps label intact; container will wrap instead */
-    }
-    
-    /* Don’t let cards get too skinny in the grid */
-    .grid{
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* was 260–280px */
-    }
-
-    /* Dark mode (auto) */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --fg: #e5e7eb;
-        --muted: #94a3b8;
-        --bg: #0b1220;
-        --card: #0f172a;
-        --border: #1e293b;
-        --accent: #8ab4ff;
-        --shadow: 0 8px 32px rgba(0,0,0,.35);
-      }
-    }
-
-    /* Manual override */
-    .dark {
-      --fg: #e5e7eb;
-      --muted: #94a3b8;
-      --bg: #0b1220;
-      --card: #0f172a;
-      --border: #1e293b;
-      --accent: #8ab4ff;
-      --shadow: 0 8px 32px rgba(0,0,0,.35);
-    }
-
-    /* ====== Base ====== */
-    * { box-sizing: border-box; transition: background .2s, color .2s, box-shadow .2s, transform .2s; }
-    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg); font-family: 'Inter', system-ui, sans-serif; }
     a { color: var(--accent); text-decoration: none; }
-    a:hover { opacity: .9; }
+    a:hover { color: var(--fg); }
     img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding-inline: clamp(20px, 5vw, 48px); }
 
-    .container { max-width: 100%; margin: 0 auto; padding-inline: clamp(16px, 5vw, 48px); }
-    @media (max-width: 768px) {
-      .container {
-        padding: 0 24px; /* smaller padding for small screens */
-      }
+    /* ====== Nav ====== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
-    @media (max-width: 768px) {
-      .hero {
-        padding-left: 24px;
-        padding-right: 24px;
-      }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
     }
-    header { border-bottom: 1px solid var(--border); background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 45%); }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
-    .brand { font-weight: 700; }
-    .nav a { margin-left: 16px; }
-    .btn { padding: 10px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); color: var(--fg); box-shadow: var(--shadow); }
-    .btn.primary { background: var(--accent); color: #fff; border: none; }
-    .btn.icon { display: inline-flex; align-items: center; gap: 8px; }
+    .brand {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .brand::before { content: '> '; opacity: 0.45; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--fg); background: rgba(255,255,255,0.05); }
+    .nav-links .btn-email {
+      background: rgba(41,121,255,0.08);
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+    .nav-links .btn-email:hover { background: rgba(41,121,255,0.16); color: var(--accent); }
 
     /* ====== Hero ====== */
-    .hero { padding-block: 54px 28px; }
+    .hero {
+      padding: 72px 0 56px;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 320px;
+      background: radial-gradient(ellipse at center, rgba(41,121,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
     .hero-wrap {
       display: grid;
-      grid-template-columns: auto minmax(500px, 2fr) minmax(250px, 1fr);
-      gap: 24px;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
       align-items: start;
     }
-
     .avatar {
-      width: clamp(112px, 10vw, 180px);  /* minimum 80px, scales with screen, max 160px */
-      height: clamp(112px, 10vw, 180px);
-      aspect-ratio: 1 / 1;
-      border-radius: 24px;
+      width: clamp(80px, 8vw, 140px);
+      height: clamp(80px, 8vw, 140px);
+      border-radius: 16px;
       object-fit: cover;
       object-position: center;
-      box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent);
-      background: #cbd5e1;
-      max-width: none;
-      max-height: none;
-      flex: 0 0 auto;
-      align-self: start;
+      border: 1px solid var(--border);
+      box-shadow: var(--glow);
+      flex-shrink: 0;
     }
+    .hero-main h1 {
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.82em;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1.1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .hero-main .sub {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 520px;
+      margin-bottom: 22px;
+      line-height: 1.7;
+    }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--fg);
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--border-hover); background: rgba(41,121,255,0.07); color: var(--fg); }
+    .btn.primary {
+      background: var(--accent);
+      color: #080c14;
+      border-color: transparent;
+      font-weight: 600;
+    }
+    .btn.primary:hover { background: #93c5fd; color: #080c14; }
 
-    h1 { font-size: 40px; margin: 0 0 6px; line-height: 1.15; }
-    .sub { color: var(--muted); margin: 0 0 12px; }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
-
-    /* ====== Education Inline (Top Right) ====== */
     .edu-inline {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--muted);
-      line-height: 1.3;
-      grid-column: 3; /* Puts it in the top-right column */
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(8,8,8,0.95);
+      max-width: 280px;
       align-self: start;
     }
-
     .edu-badge {
-      width: 66px;
-      height: 66px;
+      width: 50px;
+      height: 50px;
       object-fit: contain;
-      border-radius: 5px;
-      margin-right: 5px;
+      border-radius: 6px;
       background: transparent;
+      flex-shrink: 0;
     }
+    .edu-name { font-weight: 600; font-size: 13px; color: var(--fg); line-height: 1.3; }
+    .edu-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    .edu-name { font-weight: 700; font-size: 1.05rem; }
-    .edu-meta { font-weight: 600; font-size: 0.95rem; }
-
-    /* Responsive */
     @media (max-width: 900px) {
+      .hero-wrap { grid-template-columns: auto 1fr; }
+      .edu-inline { grid-column: 1 / -1; max-width: 100%; }
+    }
+    @media (max-width: 600px) {
       .hero-wrap { grid-template-columns: 1fr; }
-      .edu-inline { grid-column: auto; order: 3; margin-top: 8px; }
+      .avatar { width: 80px; height: 80px; }
     }
 
     /* ====== Sections ====== */
-    section { padding: 26px 0; }
-    h2 { font-size: 22px; margin: 0 0 12px; }
-    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
-    .muted { color: var(--muted); }
-    footer { border-top: 1px solid var(--border); color: var(--muted); padding: 24px 0 60px; margin-top: 12px; }
+    section { padding: 40px 0; border-top: 1px solid var(--border); }
+    .section-header { margin-bottom: 24px; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+    .section-label::before { content: '// '; }
+    h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: var(--fg); }
+
+    /* ====== About ====== */
+    .about-body { max-width: 700px; }
+    .about-body p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    /* ====== Projects ====== */
+    .project-group-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 24px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .project-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .project-group-label.active { color: var(--green); }
+    .project-group-label.active::before { content: '● '; font-size: 7px; vertical-align: middle; }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--glow);
+    }
+    .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--fg); }
+
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(41,121,255,0.07);
+      color: var(--accent);
+      border: 1px solid rgba(41,121,255,0.14);
+    }
+
+    /* Flashcard */
+    .flashcard {
+      position: relative;
+      perspective: 900px;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      margin-top: 4px;
+      height: 130px;
+      flex: 1;
+    }
+    .flash-inner {
+      position: relative;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.22,0.61,0.36,1);
+    }
+    .flashcard.is-flipped .flash-inner { transform: rotateY(180deg); }
+    .flash-face {
+      position: absolute;
+      inset: 0;
+      background: rgba(41,121,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      overflow: auto;
+    }
+    .flash-face p { font-size: 12px; color: var(--muted); line-height: 1.65; }
+    .flash-face.back { transform: rotateY(180deg); }
+    .flash-hint, .flip-hint {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      opacity: 0.45;
+    }
+    @media (hover:hover) {
+      .flashcard:hover .flash-face { border-color: rgba(41,121,255,0.22); }
+    }
+    @media (prefers-reduced-motion: reduce) { .flash-inner { transition: none; } }
+
+    .project-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .btn.small {
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+    .btn.secondary {
+      color: var(--accent2);
+      border-color: rgba(167,139,250,0.2);
+      background: rgba(167,139,250,0.05);
+    }
+    .btn.secondary:hover { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.4); color: var(--accent2); }
+
+    /* ====== Skills ====== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .skill-category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+    .skill-category:hover { border-color: var(--border-hover); }
+    .skill-category h3 {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+    .skill-category ul { display: flex; flex-wrap: wrap; gap: 5px; }
+    .skill-category li {
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 9px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .skill-category li:hover { color: var(--fg); border-color: rgba(41,121,255,0.3); }
+
+    /* ====== Courses ====== */
+    .course-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+    .course-list { display: flex; flex-direction: column; gap: 4px; max-width: 800px; }
+    .course-list li a {
+      display: block;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .course-list li a:hover {
+      color: var(--fg);
+      border-color: var(--border-hover);
+      background: rgba(41,121,255,0.04);
+      padding-left: 20px;
+    }
+
+    /* ====== Footer ====== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 20px;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer p { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--accent); }
   </style>
 </head>
 
-  <script>
-  // Flip on click/tap and with keyboard (Enter/Space)
+<script>
   document.addEventListener('click', (e) => {
     const fc = e.target.closest('.flashcard');
     if (!fc) return;
     const flipped = fc.classList.toggle('is-flipped');
     fc.setAttribute('aria-pressed', flipped ? 'true' : 'false');
   });
-
   document.addEventListener('keydown', (e) => {
-    if ((e.key !== 'Enter' && e.key !== ' ') ) return;
+    if (e.key !== 'Enter' && e.key !== ' ') return;
     const fc = e.target.closest('.flashcard');
     if (!fc) return;
     e.preventDefault();
@@ -277,92 +424,84 @@
 </script>
 
 <body>
-  <header>
-    <div class="container nav">
-      
-      <nav>
+  <!-- NAV -->
+  <nav>
+    <div class="container nav-inner">
+      <span class="brand">cecilia.sanjaya</span>
+      <div class="nav-links">
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#courses">Courses</a>
-        <a
-  href="mailto:cecs@berkeley.edu
-    ?subject=Resume%20Request
-    &body=Hi%20Cecilia,%0D%0A%0D%0ACould%20I%20please%20request%20a%20copy%20of%20your%20resume%20for%20____?%0D%0A%0D%0AThank%20you."
-  class="btn icon"
->
-  ✉️ Email
-</a>
-      </nav>
+        <a href="mailto:cecs@berkeley.edu?subject=Resume%20Request&body=Hi%20Cecilia,%0D%0A%0D%0ACould%20I%20please%20request%20a%20copy%20of%20your%20resume%20for%20____?%0D%0A%0D%0AThank%20you." class="btn-email">✉ Email</a>
+      </div>
     </div>
+  </nav>
 
+  <!-- HERO -->
+  <header>
     <div class="container hero">
       <div class="hero-wrap">
-        <!-- Avatar -->
         <img class="avatar" src="pfp.JPG" alt="Headshot of Cecilia Sanjaya">
-
-        <!-- Main text -->
         <div class="hero-main">
-          <h1>Cecilia Sanjaya</h1>
+          <h1>Cecilia Sanjaya<span class="cursor"></span></h1>
           <p class="sub">Electrical Engineer and Software Engineer exploring the intersection of hardware and AI, with experience in system architecture, hardware design, IC, microfabrication, and AI systems.</p>
-
           <div class="actions">
             <a class="btn primary" href="resume.html">Resume</a>
             <a class="btn" href="https://github.com/ceciliasanjaya">GitHub</a>
             <a class="btn" href="https://linkedin.com/in/cecilia-sanjaya">LinkedIn</a>
           </div>
         </div>
-
-        <!-- Education (top-right) -->
         <div class="edu-inline">
           <img class="edu-badge" src="berkeley-seal.png" alt="UC Berkeley" onerror="this.style.display='none'">
           <div>
             <div class="edu-name">University of California, Berkeley</div>
-            <div class="edu-meta">B.S. Electrical Engineering and Computer Sciences  ·  Class of 2027</div>
+            <div class="edu-meta">B.S. Electrical Engineering and Computer Sciences · Class of 2027</div>
           </div>
         </div>
-
       </div>
     </div>
   </header>
 
   <main class="container">
-    <section id="about">
-      <h2>About Me</h2>
-      <p>
-        Hi! I’m Cecilia Sanjaya. I was born and raised in Indonesia, where I spent the first 12 years of my life before moving to Irvine, California. Growing up between two very different environments taught me to adapt quickly and stay curious — traits that have deeply shaped how I approach engineering and problem-solving today.
-      </p>
-    
-      <p>
-        I’ve always been fascinated by how things work and how technology shapes the way we live. Engineering, to me, is not just about building devices or writing code — it’s about understanding the foundations of the modern world and creating solutions that make life better. I especially love the creative side of engineering: taking ideas from imagination to reality, combining innovation and technology to design systems that solve real-world problems.
-      </p>
-    
-      <p>
-        My long-term goal is to contribute to technologies that advance the future of computing — from the silicon level to intelligent systems — and build tools that have a meaningful impact on how people interact with technology. Whether it’s designing hardware, building secure systems, or exploring AI, I’m excited about pushing boundaries and continuously learning along the way.
-      </p>
-    
-      <p>
-        Outside of engineering, I’m someone who loves doing and experiencing as much as I can. I enjoy being active, exploring the outdoors, and trying new things — but I also love quiet time indoors, learning new skills or working on creative projects. Above all, I want to live a life full of experiences, learning as many lessons as possible and growing from everything I do.
-      </p>
-    </section>
-    <section id="projects">
-      <h2>Projects</h2>
 
-      <h3 class="project-category"> - In Progress -</h3>
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-header">
+        <div class="section-label">about</div>
+        <h2>About Me</h2>
+      </div>
+      <div class="about-body">
+        <p>Hi! I'm Cecilia Sanjaya. I was born and raised in Indonesia, where I spent the first 12 years of my life before moving to Irvine, California. Growing up between two very different environments taught me to adapt quickly and stay curious — traits that have deeply shaped how I approach engineering and problem-solving today.</p>
+        <p>I've always been fascinated by how things work and how technology shapes the way we live. Engineering, to me, is not just about building devices or writing code — it's about understanding the foundations of the modern world and creating solutions that make life better. I especially love the creative side of engineering: taking ideas from imagination to reality, combining innovation and technology to design systems that solve real-world problems.</p>
+        <p>My long-term goal is to contribute to technologies that advance the future of computing — from the silicon level to intelligent systems — and build tools that have a meaningful impact on how people interact with technology. Whether it's designing hardware, building secure systems, or exploring AI, I'm excited about pushing boundaries and continuously learning along the way.</p>
+        <p>Outside of engineering, I'm someone who loves doing and experiencing as much as I can. I enjoy being active, exploring the outdoors, and trying new things — but I also love quiet time indoors, learning new skills or working on creative projects. Above all, I want to live a life full of experiences, learning as many lessons as possible and growing from everything I do.</p>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-header">
+        <div class="section-label">work</div>
+        <h2>Projects</h2>
+      </div>
+
+      <div class="project-group-label active">in progress</div>
       <div class="grid">
+
         <article class="card">
           <h3>RISC-V Processor on FPGA</h3>
-          <p class="muted">FPGA · Verilog · Vivado · Simulations</p>
+          <div class="tech-tags">
+            <span class="tag">FPGA</span><span class="tag">Verilog</span><span class="tag">Vivado</span><span class="tag">Simulations</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
               <div class="flash-face front">
                 <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
+                <span class="flip-hint">↩ tap to flip</span>
               </div>
-              <!-- back (revealed when flipped) -->
               <div class="flash-face back">
                 <p>Design project: implementation of a full three-stage RISC-V processor system, with caches, graphics acceleration, and external peripheral components. The design is mapped and demonstrated on an FPGA hardware platform.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -373,47 +512,39 @@
 
         <article class="card">
           <h3>AI Integrated Website Development</h3>
-          <p class="muted">Next.js · TypeScript · Tailwind · AI APIs · Full-Stack</p>
+          <div class="tech-tags">
+            <span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">Tailwind</span><span class="tag">AI APIs</span><span class="tag">Full-Stack</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
               <div class="flash-face front">
                 <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
+                <span class="flip-hint">↩ tap to flip</span>
               </div>
-              <!-- back (revealed when flipped) -->
               <div class="flash-face back">
                 <p>In-progress full-stack AI-powered platform integrating simulations, data analysis and generation. Built with a scalable architecture, tier-based access control, usage tracking, and responsive UI design for real-world deployment.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
-          <!-- <div class="project-links">
-            <a class="btn small" href="#" target="_blank">Project Repo</a>
-          </div> -->
         </article>
-        
-        <!-- Add more "in progress" projects here -->
+
       </div>
 
-
-
-        <!--  Completed Section -->
-      <h3 class="project-category">Completed</h3>
+      <div class="project-group-label">completed</div>
       <div class="grid">
 
         <article class="card">
           <h3>Secure File Sharing System</h3>
-          <p class="muted">Go · Cryptography · Public-key auth · Integrity · Access control</p>
+          <div class="tech-tags">
+            <span class="tag">Go</span><span class="tag">Cryptography</span><span class="tag">Public-key auth</span><span class="tag">Access control</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Designed and implemented an end-to-end encrypted sharing system supporting user registration, invitation, revocation, and tamper-evident storage. Combined asymmetric keys for identity with symmetric encryption for content, plus HMACs and nonces to prevent replay and forgery.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -423,21 +554,17 @@
           </div>
         </article>
 
-        
         <article class="card">
           <h3>Microfabrication - Silicon Wafer</h3>
-          <p class="muted">Fabrication techniques · Microstructures · IC · Laboratory</p>
+          <div class="tech-tags">
+            <span class="tag">Fabrication</span><span class="tag">Microstructures</span><span class="tag">IC</span><span class="tag">Laboratory</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Fabricated MOS transistors and microstructures on silicon wafers using processes like oxidation, ion implantation, lithography, and etching, and evaluated their electrical and mechanical performance.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -447,21 +574,17 @@
           </div>
         </article>
 
-        
         <article class="card">
           <h3>S!XT33N Voice Controlled Car</h3>
-          <p class="muted">Arduino · C++ · ML · Signal processing · Circuit design</p>
+          <div class="tech-tags">
+            <span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">ML</span><span class="tag">Signal processing</span><span class="tag">Circuit</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Building a voice controlled car, by understanding DACs, ADCs, PWM, BJT, Mic board circuits.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -472,19 +595,16 @@
         </article>
 
         <article class="card">
-          <h3>PACman- BuildYourOwnWorld</h3>
-          <p class="muted">Java · Algorithm design · OOP</p>
+          <h3>PACman - BuildYourOwnWorld</h3>
+          <div class="tech-tags">
+            <span class="tag">Java</span><span class="tag">Algorithm design</span><span class="tag">OOP</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Developed a 2D tile-based world generation game in Java featuring randomized terrain, user interaction, and persistent save/load functionality.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -494,22 +614,17 @@
           </div>
         </article>
 
-        
-
         <article class="card">
           <h3>Electric Guitar Treble Boost</h3>
-          <p class="muted">C++ · System design · Circuit design · Linear systems · ML</p>
+          <div class="tech-tags">
+            <span class="tag">C++</span><span class="tag">System design</span><span class="tag">Circuit design</span><span class="tag">Linear systems</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Designed and built a circuit that takes as input the signal from the output jack of an electric guitar, processes the signal to both enhance its treble (i.e., high frequency) content and raise its amplitude.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -518,23 +633,18 @@
             <a class="btn small secondary" href="https://docs.google.com/presentation/d/1yyzJqlXG2k9kjQEBXjokdzFGLgiHqAcEBedovo_ugvw/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Presentation</a>
           </div>
         </article>
-    
-        <!-- Add more completed projects here -->
 
         <article class="card">
           <h3>ABBS</h3>
-          <p class="muted">Application · Swift</p>
+          <div class="tech-tags">
+            <span class="tag">Swift</span><span class="tag">iOS</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>A's Before BaeS: Designing and building an application for students to find study partners. Users can create their own profile and swipe on other profiles to find ideal partners. </p>
-                <span class="flip-hint">Tap to flip back</span>
+                <p>A's Before BaeS: Designing and building an application for students to find study partners. Users can create their own profile and swipe on other profiles to find ideal partners.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -544,21 +654,17 @@
           </div>
         </article>
 
-
         <article class="card">
           <h3>Smart Watch</h3>
-          <p class="muted">PCB Design · KiCad · ESP32</p>
+          <div class="tech-tags">
+            <span class="tag">PCB Design</span><span class="tag">KiCad</span><span class="tag">ESP32</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Functionality: display time and counts steps per day (accelerometer). Power source is from lithium batteries that go through a regulator to power the ESP32. Layout: accelerometer, display screen, and a button all connected to the ESP32. Buttons can switch between displaying the count steps and the time.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -570,18 +676,15 @@
 
         <article class="card">
           <h3>Imaging: Photodiode</h3>
-          <p class="muted">Python · Linear systems · Tomography · Fourier transforms</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Linear systems</span><span class="tag">Tomography</span><span class="tag">Fourier transforms</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <!-- front (what you see first) -->
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
-              <!-- back (revealed when flipped) -->
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built a light-sensing circuit using a photodiode to scan real images and applied linear algebra and matrix representations to model image data. Reconstructed images through linear systems theory and Fourier transforms, demonstrating how mathematical tools translate into practical imaging applications.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -591,20 +694,17 @@
           </div>
         </article>
 
-        <!-- ===================== CS161 ===================== -->
-
         <article class="card">
           <h3>Exploiting Memory Safety Vulnerabilities</h3>
-          <p class="muted">C · Assembly · Linux · GDB · Memory safety · Exploitation</p>
+          <div class="tech-tags">
+            <span class="tag">C</span><span class="tag">Assembly</span><span class="tag">Linux</span><span class="tag">GDB</span><span class="tag">Security</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Performed hands-on exploitation of unsafe string operations and stack frames, crafting inputs that trigger buffer overflows and control-flow hijacking. Used disassembly and debugging tools to reason about calling conventions, mitigations (ASLR/DEP), and secure coding practices.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -612,22 +712,18 @@
             <a class="btn small" href="https://fa25.cs161.org/proj1/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
-        
-        <!-- ===================== EE130 ===================== -->
-        
+
         <article class="card">
           <h3>NMOSFET Design</h3>
-          <p class="muted">SPICE · Device physics · Process corners · I–V modeling · Layout</p>
+          <div class="tech-tags">
+            <span class="tag">SPICE</span><span class="tag">Device physics</span><span class="tag">I–V modeling</span><span class="tag">Layout</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Modeled and designed an NMOS transistor across operating regions (cutoff, triode, saturation), extracting key parameters and validating behavior with SPICE simulations. Analyzed short-channel effects, threshold shifts, and variability; documented design trade-offs and measurements.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -636,21 +732,18 @@
             <a class="btn small secondary" href="Shasi.pdf" target="_blank" rel="noopener noreferrer">Report</a>
           </div>
         </article>
-        
-        <!-- ===================== CS188 ===================== -->
-        
+
         <article class="card">
           <h3>Search</h3>
-          <p class="muted">Python · BFS/DFS · UCS · A* · Heuristics</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">BFS/DFS</span><span class="tag">UCS</span><span class="tag">A*</span><span class="tag">Heuristics</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">Tap to flip</span>
-              </div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built generic graph search solvers and admissible heuristics to navigate grid worlds efficiently. Compared completeness and optimality of BFS/DFS/UCS, and tuned A* for strong runtime with minimal path cost.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -658,16 +751,18 @@
             <a class="btn small" href="188Search.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Multi-Agent Search</h3>
-          <p class="muted">Python · Minimax · Alpha-beta pruning · Expectimax</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Minimax</span><span class="tag">Alpha-beta pruning</span><span class="tag">Expectimax</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Implemented adversarial planners for stochastic, multi-agent environments. Built evaluation functions and pruning strategies to act robustly against opponents and chance nodes under depth limits.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -675,16 +770,18 @@
             <a class="btn small" href="188MultiAgentSearch.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Reinforcement Learning</h3>
-          <p class="muted">Python · MDPs · Value iteration · Q-learning · Exploration</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">MDPs</span><span class="tag">Value iteration</span><span class="tag">Q-learning</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Solved grid-world tasks using dynamic programming and model-free learning. Tuned discount, exploration schedules, and learning rates to converge to policies with strong expected returns.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -692,16 +789,18 @@
             <a class="btn small" href="188Reinforcement.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Ghostbusters</h3>
-          <p class="muted">Python · Probabilistic inference · Bayes nets · HMM filtering</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Probabilistic inference</span><span class="tag">Bayes nets</span><span class="tag">HMM filtering</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Tracked hidden agents by updating belief distributions over positions using noisy sensor models and transition dynamics. Compared exact and approximate inference for speed vs. accuracy.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -709,16 +808,18 @@
             <a class="btn small" href="188Ghostbusters.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>MachineLearning</h3>
-          <p class="muted">Python · Naive Bayes · Perceptron · Feature engineering · Evaluation</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Naive Bayes</span><span class="tag">Perceptron</span><span class="tag">Feature engineering</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Implemented and compared classic classifiers on image/text tasks. Built data pipelines, engineered features, and analyzed accuracy/precision-recall tradeoffs under cross-validation.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -726,18 +827,18 @@
             <a class="btn small" href="188MachineLearning.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
-        <!-- ===================== CS61C ===================== -->
-        
+
         <article class="card">
           <h3>Snek</h3>
-          <p class="muted">C · Pointers · Memory management · Testing · Performance</p>
+          <div class="tech-tags">
+            <span class="tag">C</span><span class="tag">Pointers</span><span class="tag">Memory management</span><span class="tag">Testing</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built a terminal snake game in C with careful pointer use and dynamic memory management. Focused on clean APIs, unit tests, and robustness against invalid input and edge cases.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -745,16 +846,18 @@
             <a class="btn small" href="https://cs61c.org/fa25/projects/proj1/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Classify</h3>
-          <p class="muted">C · Data layout · SIMD/parallelism · Caching · Optimization</p>
+          <div class="tech-tags">
+            <span class="tag">C</span><span class="tag">SIMD</span><span class="tag">Caching</span><span class="tag">Optimization</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Accelerated an image classifier by optimizing memory access patterns and computation kernels. Explored vectorization and cache-friendly layouts to reduce runtime while preserving correctness.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -762,16 +865,18 @@
             <a class="btn small" href="https://cs61c.org/fa25/projects/proj2/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>CS61CPU</h3>
-          <p class="muted">CPU architecture · Digital design · Control/datapath · Pipelining</p>
+          <div class="tech-tags">
+            <span class="tag">CPU architecture</span><span class="tag">Digital design</span><span class="tag">Control/datapath</span><span class="tag">Pipelining</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Designed a working CPU from first principles, integrating an ALU, register file, instruction decode, and control unit. Implemented and verified ISA functionality and hazards, then analyzed performance and correctness on test programs.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -779,18 +884,18 @@
             <a class="btn small" href="CS61CPU-Proj.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
-        <!-- ===================== CS61B ===================== -->
-        
+
         <article class="card">
           <h3>2048</h3>
-          <p class="muted">Java · 2D grid logic · Game loop · Testing</p>
+          <div class="tech-tags">
+            <span class="tag">Java</span><span class="tag">2D grid logic</span><span class="tag">Game loop</span><span class="tag">Testing</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Implemented the tile-merging logic, scoring, and win/lose conditions for the classic puzzle. Structured a clean model with deterministic testing to validate all move edge cases.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -798,16 +903,18 @@
             <a class="btn small" href="https://sp25.datastructur.es/projects/proj0/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>LinkedListDeque</h3>
-          <p class="muted">Java · Linked lists · Generics · Deque API · Testing</p>
+          <div class="tech-tags">
+            <span class="tag">Java</span><span class="tag">Linked lists</span><span class="tag">Generics</span><span class="tag">Deque API</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built a generic double-ended queue using a sentinel doubly linked list. Supported amortized-constant front/back operations and thorough unit tests for correctness and edge cases.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -815,16 +922,18 @@
             <a class="btn small" href="https://sp25.datastructur.es/projects/proj1a/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>ArrayDeque</h3>
-          <p class="muted">Java · Circular buffer · Resizing arrays · Deque API</p>
+          <div class="tech-tags">
+            <span class="tag">Java</span><span class="tag">Circular buffer</span><span class="tag">Resizing arrays</span><span class="tag">Deque API</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Implemented a deque backed by a circular array with dynamic resizing. Ensured constant-time amortized operations and efficient memory usage with minimal copying.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -832,16 +941,18 @@
             <a class="btn small" href="https://sp25.datastructur.es/projects/proj1b/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Ngordnet</h3>
-          <p class="muted">Java · Graphs · Hash maps · Parsing · Performance</p>
+          <div class="tech-tags">
+            <span class="tag">Java</span><span class="tag">Graphs</span><span class="tag">Hash maps</span><span class="tag">Parsing</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built a word-frequency exploration tool over large corpora. Parsed datasets, modeled relationships among terms, and answered time-bounded queries with efficient indexing and graph traversal.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -850,18 +961,18 @@
             <a class="btn small secondary" href="https://sp25.datastructur.es/projects/proj2b/" target="_blank" rel="noopener noreferrer">Full Description 2</a>
           </div>
         </article>
-        
-        <!-- ===================== CS61A ===================== -->
-        
+
         <article class="card">
           <h3>Game of Hog</h3>
-          <p class="muted">Python · Control flow · Simulation · Strategy</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Control flow</span><span class="tag">Simulation</span><span class="tag">Strategy</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Programmed a dice game engine with turn logic, special rules, and scoring strategies. Used higher-order functions and randomness to evaluate tactics over many simulated games.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -869,16 +980,18 @@
             <a class="btn small" href="https://cs61a.org/proj/hog/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>CATS: Computer Aided Typing Software</h3>
-          <p class="muted">Python · Strings · Timing · Autocorrect · Testing</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Strings</span><span class="tag">Timing</span><span class="tag">Autocorrect</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Built a typing-assistant that measures speed/accuracy and provides autocorrect suggestions using customizable edit-distance functions. Implemented performance tracking and fairness across players.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -886,16 +999,18 @@
             <a class="btn small" href="https://cs61a.org/proj/cats/" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Ants Vs. SomeBees</h3>
-          <p class="muted">Python · OOP · Inheritance · Simulation · Game design</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">OOP</span><span class="tag">Inheritance</span><span class="tag">Simulation</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Developed a strategic tower-defense simulation using object-oriented design. Implemented specialized unit behaviors, resource constraints, and game progression with clean class hierarchies.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -903,16 +1018,18 @@
             <a class="btn small" href="Ant-Vs-SomeBees.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
-        
+
         <article class="card">
           <h3>Scheme Interpreter</h3>
-          <p class="muted">Python · Interpreters · Parsing · REPL · Recursion</p>
+          <div class="tech-tags">
+            <span class="tag">Python</span><span class="tag">Interpreters</span><span class="tag">Parsing</span><span class="tag">REPL</span><span class="tag">Recursion</span>
+          </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">Tap to flip</span></div>
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
                 <p>Implemented a functional language interpreter supporting nested expressions, lexical scoping, special forms, and tail recursion. Built a REPL and evaluator with environment frames and dynamic error handling.</p>
-                <span class="flip-hint">Tap to flip back</span>
+                <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
@@ -920,204 +1037,104 @@
             <a class="btn small" href="Scheme-interpreter.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
+
       </div>
     </section>
-    
 
+    <!-- SKILLS -->
     <section id="skills">
-      <h2>Skills</h2>
-      <p class="muted">A broad set of technical and analytical skills built through coursework, projects, and hands-on engineering experience.</p>
-    
+      <div class="section-header">
+        <div class="section-label">stack</div>
+        <h2>Skills</h2>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">A broad set of technical and analytical skills built through coursework, projects, and hands-on engineering experience.</p>
       <div class="skills-grid">
         <div class="skill-category">
           <h3>Programming Languages</h3>
           <ul>
-            <li>Python (data analysis, scripting, ML, backend)</li>
-            <li>C / C++ (systems programming, memory management, optimization)</li>
-            <li>Java (OOP, data structures, algorithms)</li>
-            <li>Go (secure systems, backend)</li>
-            <li>Swift (iOS development, MVVM)</li>
-            <li>Verilog / SystemVerilog (digital design, hardware description)</li>
+            <li>Python</li><li>C / C++</li><li>Java</li><li>Go</li><li>Swift</li><li>Verilog / SystemVerilog</li>
           </ul>
         </div>
-    
         <div class="skill-category">
           <h3>Systems & Architecture</h3>
           <ul>
-            <li>CPU and datapath design (ALU, control unit, pipelining)</li>
-            <li>Assembly-level programming & debugging (GDB, disassembly)</li>
-            <li>Memory hierarchy, caching, and performance optimization</li>
-            <li>Parallelism and SIMD vectorization</li>
-            <li>Operating system concepts and process-level security</li>
+            <li>CPU & datapath design</li><li>Assembly & GDB</li><li>Memory hierarchy & caching</li><li>SIMD vectorization</li><li>OS & process security</li>
           </ul>
         </div>
-    
         <div class="skill-category">
           <h3>Hardware & Embedded Systems</h3>
           <ul>
-            <li>FPGA design and deployment (PYNQ, Vivado)</li>
-            <li>Digital logic, combinational and sequential circuits</li>
-            <li>Microfabrication fundamentals: oxidation, diffusion, photolithography</li>
-            <li>Device physics: MOSFET modeling and I–V characterization</li>
-            <li>PCB and circuit design for analog and mixed-signal systems</li>
+            <li>FPGA (PYNQ, Vivado)</li><li>Digital logic</li><li>Microfabrication</li><li>MOSFET modeling</li><li>PCB & circuit design</li>
           </ul>
         </div>
-        
         <div class="skill-category">
           <h3>Integrated Circuits & Microelectronics</h3>
           <ul>
-            <li>CMOS circuit design and layout (Cadence Virtuoso, Spectre)</li>
-            <li>ASIC design flow: synthesis, timing, and physical verification</li>
-            <li>Analog and digital IC design methodologies</li>
-            <li>Characterization and modeling of semiconductor devices</li>
-            <li>Experience with fabrication processes and cleanroom operations</li>
-            <li>Understanding of parasitics, layout-vs-schematic (LVS), and DRC</li>
+            <li>CMOS design (Cadence Virtuoso)</li><li>ASIC synthesis & timing</li><li>Analog & digital IC</li><li>Device characterization</li><li>LVS & DRC</li>
           </ul>
         </div>
-        
         <div class="skill-category">
-          <h3>Hands-On Engineering & Lab Experience</h3>
+          <h3>Hands-On Engineering & Lab</h3>
           <ul>
-            <li>Proficient with oscilloscopes, logic analyzers, and function generators</li>
-            <li>PCB assembly, soldering, and circuit prototyping</li>
-            <li>Hardware debugging and testing (multimeters, probe stations)</li>
-            <li>Lab experience in oxidation, ion implantation, and etching processes</li>
-            <li>System integration between hardware (FPGA/IC) and software (firmware/testing scripts)</li>
-            <li>Data acquisition and automation using Python and LabVIEW</li>
+            <li>Oscilloscopes & logic analyzers</li><li>PCB assembly & soldering</li><li>Hardware debugging</li><li>Ion implantation & etching</li><li>LabVIEW & Python DAQ</li>
           </ul>
         </div>
-    
         <div class="skill-category">
           <h3>Machine Learning & AI</h3>
           <ul>
-            <li>Neural networks (PyTorch): regression, classification, RNNs</li>
-            <li>Reinforcement learning and MDPs</li>
-            <li>Naive Bayes, Perceptron, feature engineering</li>
-            <li>Search algorithms (BFS, DFS, A*, minimax, expectimax)</li>
-            <li>Probabilistic inference and Bayesian reasoning</li>
+            <li>PyTorch (NN, RNN, classification)</li><li>Reinforcement learning & MDPs</li><li>Naive Bayes & Perceptron</li><li>Search algorithms (A*, minimax)</li><li>Probabilistic inference</li>
           </ul>
         </div>
-    
         <div class="skill-category">
           <h3>Security & Cryptography</h3>
           <ul>
-            <li>Memory safety exploitation (buffer overflow, format string)</li>
-            <li>Secure system design: access control, encryption, key management</li>
-            <li>Public-key cryptography and authentication protocols</li>
-            <li>Threat modeling and secure communication architecture</li>
+            <li>Buffer overflow & exploitation</li><li>Secure system design</li><li>Public-key cryptography</li><li>Threat modeling</li>
           </ul>
         </div>
-    
         <div class="skill-category">
           <h3>Software Engineering & Tools</h3>
           <ul>
-            <li>Git & GitHub (version control, collaborative development)</li>
-            <li>Unix/Linux command line & shell scripting</li>
-            <li>CI/CD and containerization basics (Docker)</li>
-            <li>Agile project workflows and software lifecycle</li>
-            <li>UI/UX prototyping (Figma) and frontend development (HTML/CSS/JS)</li>
+            <li>Git & GitHub</li><li>Unix / shell scripting</li><li>Docker & CI/CD</li><li>Agile workflows</li><li>Figma & frontend (HTML/CSS/JS)</li>
           </ul>
         </div>
       </div>
     </section>
 
+    <!-- COURSES -->
     <section id="courses">
-      <h2>Relevant Courses</h2>
-      <p class="course-note muted">Tap to view course description</p>
-    
+      <div class="section-header">
+        <div class="section-label">coursework</div>
+        <h2>Relevant Courses</h2>
+      </div>
+      <p class="course-note">// tap to view course description</p>
       <ul class="course-list">
-        <!-- Replace href values with your real course description URLs -->
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EECS16A/" target="_blank" rel="noopener noreferrer">
-            EECS16A — Foundations of Signals, Dynamical Systems, and Information Processing
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EECS16B/" target="_blank" rel="noopener noreferrer">
-            EECS16B — Integrated Circuits & Devices
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EECS151/" target="_blank" rel="noopener noreferrer">
-            EECS 151 — Digital Design and Integrated Circuits
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank" rel="noopener noreferrer">
-            EECS 151LB — Field-Programmable Gate Array Laboratory (FPGA)
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EE130/" target="_blank" rel="noopener noreferrer">
-            EE 130 — Integrated-Circuit Devices: electronic properties of semiconductor
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/EE143/" target="_blank" rel="noopener noreferrer">
-            EE 143 — Integrated-Circuit Device Fabrication and Micromachining Technology
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS61A/" target="_blank" rel="noopener noreferrer">
-            CS 61A — Structure and Interpretation of Computer Programs
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS61B/" target="_blank" rel="noopener noreferrer">
-            CS 61B — Data Structures
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS61C/" target="_blank" rel="noopener noreferrer">
-            CS 61C — Great Ideas in Computer Architecture (Machine Structures)
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS70/" target="_blank" rel="noopener noreferrer">
-            CS 70 — Discrete Mathematics and Probability Theory
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS188/" target="_blank" rel="noopener noreferrer">
-            CS 188 — Artificial Intelligence
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS161/" target="_blank" rel="noopener noreferrer">
-            CS 161 — Computer Security
-          </a>
-        </li>
-        <li>
-          <a href="https://www2.eecs.berkeley.edu/Courses/CS168/" target="_blank" rel="noopener noreferrer">
-            CS 168 — Internet: Architecture and Protocols
-          </a>
-        </li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16A/" target="_blank" rel="noopener noreferrer">EECS16A — Foundations of Signals, Dynamical Systems, and Information Processing</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16B/" target="_blank" rel="noopener noreferrer">EECS16B — Integrated Circuits &amp; Devices</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151/" target="_blank" rel="noopener noreferrer">EECS 151 — Digital Design and Integrated Circuits</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank" rel="noopener noreferrer">EECS 151LB — Field-Programmable Gate Array Laboratory (FPGA)</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EE130/" target="_blank" rel="noopener noreferrer">EE 130 — Integrated-Circuit Devices: electronic properties of semiconductor</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/EE143/" target="_blank" rel="noopener noreferrer">EE 143 — Integrated-Circuit Device Fabrication and Micromachining Technology</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61A/" target="_blank" rel="noopener noreferrer">CS 61A — Structure and Interpretation of Computer Programs</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61B/" target="_blank" rel="noopener noreferrer">CS 61B — Data Structures</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61C/" target="_blank" rel="noopener noreferrer">CS 61C — Great Ideas in Computer Architecture (Machine Structures)</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS70/" target="_blank" rel="noopener noreferrer">CS 70 — Discrete Mathematics and Probability Theory</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS188/" target="_blank" rel="noopener noreferrer">CS 188 — Artificial Intelligence</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS161/" target="_blank" rel="noopener noreferrer">CS 161 — Computer Security</a></li>
+        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS168/" target="_blank" rel="noopener noreferrer">CS 168 — Internet: Architecture and Protocols</a></li>
       </ul>
     </section>
 
-
-
-
-    
   </main>
 
   <footer>
-    <div class="container">
-      © <span id="y"></span> Cecilia Sanjaya · <a href="https://ceciliasanjaya.github.io">ceciliasanjaya.github.io</a>
+    <div class="container footer-inner">
+      <p>© <span id="y"></span> Cecilia Sanjaya</p>
+      <p><a href="https://ceciliasanjaya.github.io">ceciliasanjaya.github.io</a></p>
     </div>
   </footer>
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
-    const root = document.documentElement;
-    const key = "theme";
-    const saved = localStorage.getItem(key);
-    if (saved === "dark") root.classList.add("dark");
-    if (saved === "light") root.classList.remove("dark");
-    document.getElementById("theme").addEventListener("click", () => {
-      const isDark = root.classList.toggle("dark");
-      localStorage.setItem(key, isDark ? "dark" : "light");
-    });
   </script>
 </body>
 </html>
