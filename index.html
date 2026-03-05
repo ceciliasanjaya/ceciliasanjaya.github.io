@@ -6,7 +6,7 @@
   <title>Cecilia Sanjaya</title>
   <meta name="description" content="Portfolio of Cecilia Sanjaya — EE & CS at UC Berkeley." />
   <meta name="theme-color" content="#080c14">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -16,7 +16,7 @@
       --border: rgba(41,121,255,0.14);
       --border-hover: rgba(41,121,255,0.4);
       --fg: #ffffff;
-      --muted: #5a5a72;
+      --muted: #848499;
       --accent: #2979ff;
       --accent2: #a78bfa;
       --green: #00e676;
@@ -25,6 +25,8 @@
       --sans: 'Inter', system-ui, sans-serif;
       --glow: 0 0 24px rgba(41,121,255,0.15);
       --maxw: 1100px;
+      --mx: -999px;
+      --my: -999px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,14 +38,77 @@
       font-size: 15px;
       line-height: 1.6;
       overflow-x: hidden;
-      background-image: radial-gradient(circle, rgba(41,121,255,0.04) 1px, transparent 1px);
-      background-size: 32px 32px;
+    }
+    /* Mouse flashlight — very subtle */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: radial-gradient(
+        circle 300px at var(--mx) var(--my),
+        rgba(255,255,255,0.028) 0%,
+        transparent 100%
+      );
+      transition: background 0.08s;
     }
     a { color: var(--accent); text-decoration: none; }
     a:hover { color: var(--fg); }
     img { display: block; max-width: 100%; }
     ul { list-style: none; }
     .container { max-width: var(--maxw); margin: 0 auto; padding-inline: clamp(20px, 5vw, 48px); }
+
+    /* ====== Binary rain canvas ====== */
+    #binary-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+    }
+
+    /* ====== Left Sidebar ====== */
+    .left-sidebar {
+      position: fixed;
+      left: 0;
+      top: 56px;
+      bottom: 0;
+      width: 110px;
+      padding: 48px 0 40px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 50;
+      border-right: 1px solid var(--border);
+    }
+    .left-sidebar a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      padding: 10px 18px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.15s, background 0.15s, transform 0.15s;
+      display: block;
+    }
+    .left-sidebar a:hover,
+    .left-sidebar a.active {
+      color: var(--fg);
+      background: rgba(41,121,255,0.06);
+    }
+    .left-sidebar a.active {
+      color: var(--accent);
+      border-right: 2px solid var(--accent);
+    }
+    .left-sidebar a:hover { transform: translateX(3px); }
+
+    /* Shift page content right of sidebar */
+    nav, header, main, footer { margin-left: 110px; }
+    @media (max-width: 768px) {
+      .left-sidebar { display: none; }
+      nav, header, main, footer { margin-left: 0; }
+    }
 
     /* ====== Nav ====== */
     nav {
@@ -114,10 +179,12 @@
       flex-shrink: 0;
     }
     .hero-main h1 {
-      font-size: clamp(26px, 3.5vw, 42px);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
+      font-family: 'Orbitron', var(--mono);
+      font-size: clamp(20px, 2.8vw, 34px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       margin-bottom: 10px;
     }
     .cursor {
@@ -208,13 +275,77 @@
     h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: var(--fg); }
 
     /* ====== About ====== */
-    .about-body { max-width: 700px; }
-    .about-body p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-      margin-bottom: 14px;
+    .about-terminal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px;
+      max-width: 680px;
     }
+    .at-header {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 16px; padding-bottom: 11px; border-bottom: 1px solid var(--border);
+    }
+    .at-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .at-dot.r { background: #ff5f57; } .at-dot.y { background: #febc2e; } .at-dot.g { background: #28c840; }
+    .at-title { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: 4px; }
+    .at-prompt { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+    .at-prompt span { color: var(--accent); }
+    .at-typed { font-family: var(--mono); font-size: 15px; color: var(--fg); min-height: 1.5em; }
+    .at-cursor {
+      display: inline-block; width: 2px; height: 1em;
+      background: var(--accent); margin-left: 1px;
+      vertical-align: text-bottom; animation: blink 1.1s step-end infinite;
+    }
+    /* Topics */
+    .ab-topics-wrap { opacity: 0; pointer-events: none; transition: opacity 0.4s; max-width: 680px; }
+    .ab-topics-wrap.vis { opacity: 1; pointer-events: auto; }
+    .ab-topics-label {
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+    }
+    .ab-topics-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ab-topic-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 7px; color: var(--muted); font-size: 12px;
+      padding: 7px 14px; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+      font-family: var(--mono); letter-spacing: 0.02em;
+    }
+    .ab-topic-btn:hover { background: rgba(41,121,255,0.08); border-color: var(--border-hover); color: var(--fg); transform: translateY(-1px); }
+    .ab-topic-btn.active { background: rgba(41,121,255,0.12); border-color: var(--accent); color: var(--accent); }
+    /* Panels */
+    .ab-panels { margin-top: 28px; max-width: 680px; }
+    .ab-panel { display: none; animation: fadeUp 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+    .ab-panel.active { display: block; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .ab-panel p { color: var(--muted); font-size: 14px; line-height: 1.85; margin-bottom: 12px; }
+    .ab-panel p strong { color: var(--fg); font-weight: 600; }
+    /* Stat row */
+    .ab-stat-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .ab-stat {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 18px; min-width: 120px; transition: border-color 0.2s;
+    }
+    .ab-stat:hover { border-color: var(--border-hover); }
+    .ab-stat-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--accent); }
+    .ab-stat-key { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    /* Timeline */
+    .ab-timeline { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .ab-tl-item { display: grid; grid-template-columns: 80px 1fr; gap: 0 16px; align-items: start; }
+    .ab-tl-year { font-family: var(--mono); font-size: 11px; color: var(--accent); padding-top: 13px; }
+    .ab-tl-body {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 11px 14px;
+    }
+    .ab-tl-body h4 { font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 3px; }
+    .ab-tl-body p { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 0; }
+    /* Tag cloud */
+    .ab-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .ab-tag {
+      font-family: var(--mono); font-size: 11px; padding: 3px 9px; border-radius: 5px;
+      background: rgba(41,121,255,0.07); color: var(--accent); border: 1px solid rgba(41,121,255,0.14);
+    }
+    /* CTA row */
+    .ab-cta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 
     /* ====== Projects ====== */
     .project-group-label {
@@ -237,6 +368,52 @@
     .project-group-label.active { color: var(--green); }
     .project-group-label.active::before { content: '● '; font-size: 7px; vertical-align: middle; }
 
+    /* Sub-category labels inside completed — collapsible */
+    .project-sub-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 28px 0 10px;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s;
+    }
+    .project-sub-label:hover { opacity: 1; }
+    .project-sub-label::before { content: '─ '; flex-shrink: 0; }
+    .project-sub-label::after {
+      content: '[ + ]';
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      opacity: 0.45;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .project-sub-label.open::after { content: '[ − ]'; opacity: 0.6; }
+    .project-sub-label.ee { color: var(--green); }
+    .project-sub-label.cs { color: var(--accent2); }
+
+    /* Collapsed grids: hidden by default when they follow a sub-label */
+    .project-sub-label + .grid {
+      display: none;
+    }
+    .project-sub-label + .grid.expanded {
+      display: grid;
+    }
+
+    /* Pop-in animation for cards */
+    @keyframes cardPopIn {
+      0%   { opacity: 0; transform: scale(0.8) translateY(16px); }
+      65%  { opacity: 1; transform: scale(1.03) translateY(-3px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
     .grid {
       display: grid;
       gap: 12px;
@@ -249,11 +426,12 @@
       padding: 18px;
       display: flex;
       flex-direction: column;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     }
     .card:hover {
       border-color: var(--border-hover);
       box-shadow: var(--glow);
+      transform: scale(1.02);
     }
     .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--fg); }
 
@@ -387,6 +565,239 @@
       padding-left: 20px;
     }
 
+    /* ====== Search Bar ====== */
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 280px;
+      margin: 0 16px;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 48px 6px 32px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--border-hover); background: rgba(41,121,255,0.05); }
+    .search-icon {
+      position: absolute;
+      left: 10px; top: 50%;
+      transform: translateY(-50%);
+      width: 13px; height: 13px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .search-count {
+      position: absolute;
+      right: 9px; top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    mark.sh {
+      background: rgba(41,121,255,0.28);
+      color: var(--fg);
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+    .card.sdim { opacity: 0.2; }
+    .card.smatch { border-color: rgba(41,121,255,0.35) !important; }
+    .skill-category.sdim { opacity: 0.2; }
+    .skill-category.smatch { border-color: rgba(41,121,255,0.35) !important; }
+    .course-list li.sdim { opacity: 0.2; }
+    .course-list li.smatch a { border-color: rgba(41,121,255,0.35); }
+
+    /* ====== FAQ Chatbot ====== */
+    .chat-toggle {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 24px rgba(41,121,255,0.45);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .chat-toggle:hover { transform: scale(1.09); background: #3d8bff; }
+    .chat-toggle svg { width: 22px; height: 22px; color: #fff; }
+    .chat-toggle .chat-notif {
+      position: absolute;
+      top: 1px; right: 1px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 2px solid var(--bg);
+    }
+    .chat-panel {
+      position: fixed;
+      bottom: 90px; right: 28px;
+      width: 300px;
+      max-height: 480px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      z-index: 199;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(41,121,255,0.08);
+      transform: translateY(14px) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.22,1,0.36,1), opacity 0.22s;
+    }
+    .chat-panel.open {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .chat-header {
+      padding: 13px 14px 11px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      background: rgba(41,121,255,0.04);
+    }
+    .chat-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .chat-hname { font-size: 13px; font-weight: 600; color: var(--fg); }
+    .chat-hstatus {
+      font-family: var(--mono); font-size: 10px; color: var(--green);
+    }
+    .chat-hstatus::before { content: '● '; }
+    .chat-close {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 18px; line-height: 1;
+      padding: 2px; margin-left: auto;
+    }
+    .chat-close:hover { color: var(--fg); }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scroll-behavior: smooth;
+    }
+    .chat-bubble {
+      max-width: 88%;
+      padding: 8px 11px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      line-height: 1.55;
+      animation: bubbleIn 0.2s ease both;
+    }
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .chat-bubble.bot {
+      background: rgba(41,121,255,0.1);
+      border: 1px solid rgba(41,121,255,0.15);
+      color: var(--fg);
+      align-self: flex-start;
+      border-bottom-left-radius: 3px;
+    }
+    .chat-bubble.user {
+      background: var(--accent);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 3px;
+      font-weight: 500;
+    }
+    .chat-choices {
+      padding: 8px 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .chat-choice {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--fg);
+      font-size: 12px;
+      padding: 7px 11px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      font-family: var(--sans);
+    }
+    .chat-choice:hover { background: rgba(41,121,255,0.1); border-color: var(--border-hover); }
+    .chat-email-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: var(--accent);
+      color: #fff !important;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px;
+      text-decoration: none;
+      transition: background 0.15s;
+      margin-top: 2px;
+    }
+    .chat-email-link:hover { background: #3d8bff; }
+    .chat-restart-btn {
+      background: none; border: none; color: var(--muted);
+      font-family: var(--mono); font-size: 10px;
+      cursor: pointer; text-align: center; padding: 3px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      transition: color 0.15s;
+    }
+    .chat-restart-btn:hover { color: var(--fg); }
+
+    /* ====== Shared section interaction pattern ====== */
+    .sec-terminal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 22px; margin-bottom: 20px;
+    }
+    .sec-typed { font-family: var(--mono); font-size: 14px; color: var(--fg); min-height: 1.4em; }
+    .sec-topics-wrap { margin-bottom: 20px; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+    .sec-topics-wrap.vis { opacity: 1; pointer-events: auto; }
+    .sec-topics-label { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .sec-topics-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+    .sec-topic-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 7px; color: var(--muted); font-size: 11px;
+      padding: 6px 13px; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      font-family: var(--mono); letter-spacing: 0.02em;
+    }
+    .sec-topic-btn:hover { background: rgba(41,121,255,0.08); border-color: var(--border-hover); color: var(--fg); }
+    .sec-topic-btn.active { background: rgba(41,121,255,0.12); border-color: var(--accent); color: var(--accent); }
+    .sec-topic-btn.ee-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.07); }
+    .sec-topic-btn.cs-btn.active { border-color: var(--accent2); color: var(--accent2); background: rgba(167,139,250,0.07); }
+    .sec-panel { display: none; }
+    .sec-panel.active { display: block; animation: fadeUp 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+
     /* ====== Footer ====== */
     footer {
       border-top: 1px solid var(--border);
@@ -424,11 +835,28 @@
 </script>
 
 <body>
+  <!-- Binary rain canvas -->
+  <canvas id="binary-canvas"></canvas>
+
+  <!-- Left sidebar -->
+  <aside class="left-sidebar">
+    <a href="#about" data-section="about">About</a>
+    <a href="#projects" data-section="projects">Projects</a>
+    <a href="#skills" data-section="skills">Skills</a>
+    <a href="#courses" data-section="courses">Courses</a>
+  </aside>
+
   <!-- NAV -->
   <nav>
     <div class="container nav-inner">
       <span class="brand">cecilia.sanjaya</span>
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search-input" class="search-input" type="text" placeholder="search skills, projects…" autocomplete="off" spellcheck="false" aria-label="Search portfolio content">
+        <span id="search-count" class="search-count"></span>
+      </div>
       <div class="nav-links">
+        <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#courses">Courses</a>
@@ -470,11 +898,94 @@
         <div class="section-label">about</div>
         <h2>About Me</h2>
       </div>
-      <div class="about-body">
-        <p>Hi! I'm Cecilia Sanjaya. I was born and raised in Indonesia, where I spent the first 12 years of my life before moving to Irvine, California. Growing up between two very different environments taught me to adapt quickly and stay curious — traits that have deeply shaped how I approach engineering and problem-solving today.</p>
-        <p>I've always been fascinated by how things work and how technology shapes the way we live. Engineering, to me, is not just about building devices or writing code — it's about understanding the foundations of the modern world and creating solutions that make life better. I especially love the creative side of engineering: taking ideas from imagination to reality, combining innovation and technology to design systems that solve real-world problems.</p>
-        <p>My long-term goal is to contribute to technologies that advance the future of computing — from the silicon level to intelligent systems — and build tools that have a meaningful impact on how people interact with technology. Whether it's designing hardware, building secure systems, or exploring AI, I'm excited about pushing boundaries and continuously learning along the way.</p>
-        <p>Outside of engineering, I'm someone who loves doing and experiencing as much as I can. I enjoy being active, exploring the outdoors, and trying new things — but I also love quiet time indoors, learning new skills or working on creative projects. Above all, I want to live a life full of experiences, learning as many lessons as possible and growing from everything I do.</p>
+
+      <!-- Terminal typing intro -->
+      <div class="about-terminal">
+        <div class="at-header">
+          <div class="at-dot r"></div><div class="at-dot y"></div><div class="at-dot g"></div>
+          <span class="at-title">cecilia@berkeley — intro.sh</span>
+        </div>
+        <div class="at-prompt"><span>$</span> cat intro.txt</div>
+        <div class="at-typed" id="at-typed"><span class="at-cursor"></span></div>
+      </div>
+
+      <!-- Topic buttons -->
+      <div class="ab-topics-wrap" id="ab-topics-wrap">
+        <div class="ab-topics-label">// click to learn more</div>
+        <div class="ab-topics-grid">
+          <button class="ab-topic-btn" data-abtopic="background">background</button>
+          <button class="ab-topic-btn" data-abtopic="engineering">engineering</button>
+          <button class="ab-topic-btn" data-abtopic="goals">goals</button>
+          <button class="ab-topic-btn" data-abtopic="outside">outside of work</button>
+          <button class="ab-topic-btn" data-abtopic="fun">fun facts</button>
+        </div>
+      </div>
+
+      <!-- Content panels -->
+      <div class="ab-panels">
+
+        <div class="ab-panel" id="abp-background">
+          <div class="ab-stat-row">
+            <div class="ab-stat"><div class="ab-stat-val">Jakarta</div><div class="ab-stat-key">where I was born</div></div>
+            <div class="ab-stat"><div class="ab-stat-val">Irvine, CA</div><div class="ab-stat-key">grew up in the US</div></div>
+            <div class="ab-stat"><div class="ab-stat-val">Berkeley</div><div class="ab-stat-key">where I study now</div></div>
+          </div>
+          <p>I was born and raised in <strong>Indonesia</strong>, spending my first 12 years in Jakarta before moving to Irvine, California. Growing up between two very different worlds taught me to adapt quickly and stay curious — traits that shaped how I approach engineering today.</p>
+          <p>There's something about having to rebuild your world from scratch that makes you comfortable with ambiguity. That mindset follows me into every hard problem I work on.</p>
+          <div class="ab-timeline">
+            <div class="ab-tl-item"><div class="ab-tl-year">2003</div><div class="ab-tl-body"><h4>Born in Jakarta, Indonesia</h4><p>Started life in one of the world's most dynamic cities.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">2015</div><div class="ab-tl-body"><h4>Moved to Irvine, California</h4><p>New language, new school, new culture — adapted fast.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">2023</div><div class="ab-tl-body"><h4>UC Berkeley — EECS</h4><p>Admitted to the #1 public university for Electrical Engineering &amp; CS.</p></div></div>
+          </div>
+        </div>
+
+        <div class="ab-panel" id="abp-engineering">
+          <p>Engineering, to me, is about <strong>understanding the foundations of the modern world</strong> and using that knowledge to build things that matter. I'm drawn to every level — from silicon to software.</p>
+          <p>I'm especially interested in the intersection of <strong>hardware and AI</strong>: how physical constraints of silicon meet intelligent systems. It feels like the frontier of everything interesting right now.</p>
+          <div class="ab-tags">
+            <span class="ab-tag">FPGA Design</span><span class="ab-tag">IC Fabrication</span><span class="ab-tag">AI Systems</span>
+            <span class="ab-tag">Full-Stack Dev</span><span class="ab-tag">Computer Security</span><span class="ab-tag">Machine Learning</span>
+            <span class="ab-tag">Embedded Systems</span><span class="ab-tag">Cryptography</span>
+          </div>
+          <div class="ab-stat-row">
+            <div class="ab-stat"><div class="ab-stat-val">25+</div><div class="ab-stat-key">projects completed</div></div>
+            <div class="ab-stat"><div class="ab-stat-val">EE + CS</div><div class="ab-stat-key">dual-domain expertise</div></div>
+          </div>
+          <div class="ab-cta">
+            <a class="btn small" href="#projects">View Projects</a>
+            <a class="btn small" href="#skills">See Full Stack</a>
+          </div>
+        </div>
+
+        <div class="ab-panel" id="abp-goals">
+          <p>My long-term goal is to contribute to technologies that <strong>advance the future of computing</strong> — from the silicon level to intelligent systems — and build tools with real, lasting impact.</p>
+          <p>Right now I'm especially excited about <strong>hardware-AI co-design</strong>: how we build chips optimized for intelligent workloads. I think the next decade of breakthroughs lives at that boundary.</p>
+          <div class="ab-timeline">
+            <div class="ab-tl-item"><div class="ab-tl-year">2025–26</div><div class="ab-tl-body"><h4>Summer Internship</h4><p>Looking for SWE, hardware, or AI systems roles — building real things at scale.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">2027</div><div class="ab-tl-body"><h4>B.S. EECS — UC Berkeley</h4><p>Graduating with focus on computer architecture and AI systems.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">Beyond</div><div class="ab-tl-body"><h4>Hardware-AI Co-design</h4><p>Contribute to the next generation of computing — silicon to intelligent systems.</p></div></div>
+          </div>
+          <div class="ab-cta">
+            <a class="btn small primary" href="resume.html">Request Resume</a>
+            <a class="btn small" href="mailto:cecs@berkeley.edu">Email Me</a>
+          </div>
+        </div>
+
+        <div class="ab-panel" id="abp-outside">
+          <p>I want to live a life <strong>full of experiences</strong>. I love being active and outdoors — hiking, trying new sports, exploring new places. Physical challenge resets the mind in a way no screen can.</p>
+          <p>I also love quiet time: learning new skills out of pure curiosity, working on creative projects, reading things completely unrelated to engineering. The best engineers have wide-ranging interests.</p>
+          <p>Growing up between Indonesia and California means I have a deep appreciation for food, culture, and travel. There's no better way to think differently than experiencing how other people live.</p>
+        </div>
+
+        <div class="ab-panel" id="abp-fun">
+          <div class="ab-timeline">
+            <div class="ab-tl-item"><div class="ab-tl-year">lang</div><div class="ab-tl-body"><h4>Bilingual</h4><p>Fluent in English and Indonesian. I think in both, sometimes simultaneously.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">fab</div><div class="ab-tl-body"><h4>I've fabricated a transistor</h4><p>Literally made a working MOSFET on a silicon wafer in a cleanroom. Not everyone can say that.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">music</div><div class="ab-tl-body"><h4>Built an electric guitar amplifier</h4><p>Designed the circuit, built it, then played through it. Engineering meets music.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">meta</div><div class="ab-tl-body"><h4>This site has a chatbot</h4><p>Try the icon in the bottom-right corner. I built it. It knows quite a bit about me.</p></div></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -485,7 +996,28 @@
         <h2>Projects</h2>
       </div>
 
-      <div class="project-group-label active">in progress</div>
+      <!-- Terminal intro -->
+      <div class="sec-terminal">
+        <div class="at-header">
+          <div class="at-dot r"></div><div class="at-dot y"></div><div class="at-dot g"></div>
+          <span class="at-title">cecilia@berkeley — projects.sh</span>
+        </div>
+        <div class="at-prompt"><span>$</span> ls ./projects/</div>
+        <div class="sec-typed" id="proj-typed"><span class="at-cursor"></span></div>
+      </div>
+      <!-- Category buttons -->
+      <div class="sec-topics-wrap" id="proj-topics">
+        <div class="sec-topics-label">// select category</div>
+        <div class="sec-topics-grid">
+          <button class="sec-topic-btn" data-sectarget="proj-inprog">in progress</button>
+          <button class="sec-topic-btn ee-btn" data-sectarget="proj-ee">ee — hardware</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="proj-security">cs — security</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="proj-ai">cs — ai + ml</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="proj-software">cs — software</button>
+        </div>
+      </div>
+
+      <div class="sec-panel" id="proj-inprog">
       <div class="grid">
 
         <article class="card">
@@ -531,28 +1063,10 @@
 
       </div>
 
-      <div class="project-group-label">completed</div>
-      <div class="grid">
+      </div><!-- /proj-inprog panel -->
 
-        <article class="card">
-          <h3>Secure File Sharing System</h3>
-          <div class="tech-tags">
-            <span class="tag">Go</span><span class="tag">Cryptography</span><span class="tag">Public-key auth</span><span class="tag">Access control</span>
-          </div>
-          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
-            <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
-              <div class="flash-face back">
-                <p>Designed and implemented an end-to-end encrypted sharing system supporting user registration, invitation, revocation, and tamper-evident storage. Combined asymmetric keys for identity with symmetric encryption for content, plus HMACs and nonces to prevent replay and forgery.</p>
-                <span class="flip-hint">↩ tap to flip back</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-links">
-            <a class="btn small" href="https://fa25.cs161.org/proj2/" target="_blank" rel="noopener noreferrer">Full Description</a>
-            <a class="btn small secondary" href="https://docs.google.com/document/d/1EASzyDkPTgBWjNyk9BKXMssB7kSTmVf_Wh2cUGbj6-U/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Design Doc</a>
-          </div>
-        </article>
+      <div class="sec-panel" id="proj-ee">
+      <div class="grid">
 
         <article class="card">
           <h3>Microfabrication - Silicon Wafer</h3>
@@ -575,42 +1089,22 @@
         </article>
 
         <article class="card">
-          <h3>S!XT33N Voice Controlled Car</h3>
+          <h3>NMOSFET Design</h3>
           <div class="tech-tags">
-            <span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">ML</span><span class="tag">Signal processing</span><span class="tag">Circuit</span>
+            <span class="tag">SPICE</span><span class="tag">Device physics</span><span class="tag">I–V modeling</span><span class="tag">Layout</span>
           </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Building a voice controlled car, by understanding DACs, ADCs, PWM, BJT, Mic board circuits.</p>
+                <p>Modeled and designed an NMOS transistor across operating regions (cutoff, triode, saturation), extracting key parameters and validating behavior with SPICE simulations. Analyzed short-channel effects, threshold shifts, and variability; documented design trade-offs and measurements.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
           <div class="project-links">
-            <a class="btn small" href="https://github.com/ceciliasanjaya/sixt33n-voice-controlled-car" target="_blank">Code</a>
-            <a class="btn small secondary" href="https://drive.google.com/file/d/1f-Y2tDlbhth7Fnib0eRqTI9WYQEqfj7H/view?usp=sharing" target="_blank" rel="noopener noreferrer">Video</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>PACman - BuildYourOwnWorld</h3>
-          <div class="tech-tags">
-            <span class="tag">Java</span><span class="tag">Algorithm design</span><span class="tag">OOP</span>
-          </div>
-          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
-            <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
-              <div class="flash-face back">
-                <p>Developed a 2D tile-based world generation game in Java featuring randomized terrain, user interaction, and persistent save/load functionality.</p>
-                <span class="flip-hint">↩ tap to flip back</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-links">
-            <a class="btn small" href="https://github.com/Berkeley-CS61B-Student/sp24-proj3-g636" target="_blank" rel="noopener noreferrer">Code</a>
-            <a class="btn small secondary" href="https://drive.google.com/file/d/1GtR3-Fu1MzjbCDR7R5URLPZu8otScA_j/view?usp=sharing" target="_blank" rel="noopener noreferrer">Demo</a>
+            <a class="btn small" href="ProjectDescription_EE130_Spring2025.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
+            <a class="btn small secondary" href="Shasi.pdf" target="_blank" rel="noopener noreferrer">Report</a>
           </div>
         </article>
 
@@ -635,26 +1129,6 @@
         </article>
 
         <article class="card">
-          <h3>ABBS</h3>
-          <div class="tech-tags">
-            <span class="tag">Swift</span><span class="tag">iOS</span>
-          </div>
-          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
-            <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
-              <div class="flash-face back">
-                <p>A's Before BaeS: Designing and building an application for students to find study partners. Users can create their own profile and swipe on other profiles to find ideal partners.</p>
-                <span class="flip-hint">↩ tap to flip back</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-links">
-            <a class="btn small" href="https://github.com/ceciliasanjaya/ABBSproj" target="_blank" rel="noopener noreferrer">Code</a>
-            <a class="btn small secondary" href="https://www.figma.com/proto/2oUtuicJfaVV6lDtAbhmQr/Cubstart--ABBS-Final-Project?node-id=6-98832&t=m1NoXJrooZrj25j0-1&starting-point-node-id=6%3A98832" target="_blank" rel="noopener noreferrer">Demo</a>
-          </div>
-        </article>
-
-        <article class="card">
           <h3>Smart Watch</h3>
           <div class="tech-tags">
             <span class="tag">PCB Design</span><span class="tag">KiCad</span><span class="tag">ESP32</span>
@@ -671,6 +1145,26 @@
           <div class="project-links">
             <a class="btn small" href="https://github.com/ceciliasanjaya/SmartWatch-HOPE-IEEE" target="_blank" rel="noopener noreferrer">Code</a>
             <a class="btn small" href="https://docs.google.com/presentation/d/1gTd-KEipeutf63Hj03tNglmZb4Kv6eaTjU8ZGE6pKV8/edit?slide=id.g270046184e3_0_0#slide=id.g270046184e3_0_0" target="_blank" rel="noopener noreferrer">Presentation</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>S!XT33N Voice Controlled Car</h3>
+          <div class="tech-tags">
+            <span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">ML</span><span class="tag">Signal processing</span><span class="tag">Circuit</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Building a voice controlled car, by understanding DACs, ADCs, PWM, BJT, Mic board circuits.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://github.com/ceciliasanjaya/sixt33n-voice-controlled-car" target="_blank">Code</a>
+            <a class="btn small secondary" href="https://drive.google.com/file/d/1f-Y2tDlbhth7Fnib0eRqTI9WYQEqfj7H/view?usp=sharing" target="_blank" rel="noopener noreferrer">Video</a>
           </div>
         </article>
 
@@ -694,6 +1188,33 @@
           </div>
         </article>
 
+      </div>
+
+      </div><!-- /proj-ee panel -->
+
+      <div class="sec-panel" id="proj-security">
+      <div class="grid">
+
+        <article class="card">
+          <h3>Secure File Sharing System</h3>
+          <div class="tech-tags">
+            <span class="tag">Go</span><span class="tag">Cryptography</span><span class="tag">Public-key auth</span><span class="tag">Access control</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Designed and implemented an end-to-end encrypted sharing system supporting user registration, invitation, revocation, and tamper-evident storage. Combined asymmetric keys for identity with symmetric encryption for content, plus HMACs and nonces to prevent replay and forgery.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://fa25.cs161.org/proj2/" target="_blank" rel="noopener noreferrer">Full Description</a>
+            <a class="btn small secondary" href="https://docs.google.com/document/d/1EASzyDkPTgBWjNyk9BKXMssB7kSTmVf_Wh2cUGbj6-U/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Design Doc</a>
+          </div>
+        </article>
+
         <article class="card">
           <h3>Exploiting Memory Safety Vulnerabilities</h3>
           <div class="tech-tags">
@@ -714,24 +1235,68 @@
         </article>
 
         <article class="card">
-          <h3>NMOSFET Design</h3>
+          <h3>CS61CPU</h3>
           <div class="tech-tags">
-            <span class="tag">SPICE</span><span class="tag">Device physics</span><span class="tag">I–V modeling</span><span class="tag">Layout</span>
+            <span class="tag">CPU architecture</span><span class="tag">Digital design</span><span class="tag">Control/datapath</span><span class="tag">Pipelining</span>
           </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Modeled and designed an NMOS transistor across operating regions (cutoff, triode, saturation), extracting key parameters and validating behavior with SPICE simulations. Analyzed short-channel effects, threshold shifts, and variability; documented design trade-offs and measurements.</p>
+                <p>Designed a working CPU from first principles, integrating an ALU, register file, instruction decode, and control unit. Implemented and verified ISA functionality and hazards, then analyzed performance and correctness on test programs.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
           <div class="project-links">
-            <a class="btn small" href="ProjectDescription_EE130_Spring2025.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
-            <a class="btn small secondary" href="Shasi.pdf" target="_blank" rel="noopener noreferrer">Report</a>
+            <a class="btn small" href="CS61CPU-Proj.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
           </div>
         </article>
+
+        <article class="card">
+          <h3>Snek</h3>
+          <div class="tech-tags">
+            <span class="tag">C</span><span class="tag">Pointers</span><span class="tag">Memory management</span><span class="tag">Testing</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Built a terminal snake game in C with careful pointer use and dynamic memory management. Focused on clean APIs, unit tests, and robustness against invalid input and edge cases.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://cs61c.org/fa25/projects/proj1/" target="_blank" rel="noopener noreferrer">Full Description</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Classify</h3>
+          <div class="tech-tags">
+            <span class="tag">C</span><span class="tag">SIMD</span><span class="tag">Caching</span><span class="tag">Optimization</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Accelerated an image classifier by optimizing memory access patterns and computation kernels. Explored vectorization and cache-friendly layouts to reduce runtime while preserving correctness.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://cs61c.org/fa25/projects/proj2/" target="_blank" rel="noopener noreferrer">Full Description</a>
+          </div>
+        </article>
+
+      </div>
+
+      </div><!-- /proj-security panel -->
+
+      <div class="sec-panel" id="proj-ai">
+      <div class="grid">
 
         <article class="card">
           <h3>Search</h3>
@@ -828,60 +1393,50 @@
           </div>
         </article>
 
+      </div>
+
+      </div><!-- /proj-ai panel -->
+
+      <div class="sec-panel" id="proj-software">
+      <div class="grid">
+
         <article class="card">
-          <h3>Snek</h3>
+          <h3>PACman - BuildYourOwnWorld</h3>
           <div class="tech-tags">
-            <span class="tag">C</span><span class="tag">Pointers</span><span class="tag">Memory management</span><span class="tag">Testing</span>
+            <span class="tag">Java</span><span class="tag">Algorithm design</span><span class="tag">OOP</span>
           </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a terminal snake game in C with careful pointer use and dynamic memory management. Focused on clean APIs, unit tests, and robustness against invalid input and edge cases.</p>
+                <p>Developed a 2D tile-based world generation game in Java featuring randomized terrain, user interaction, and persistent save/load functionality.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
           <div class="project-links">
-            <a class="btn small" href="https://cs61c.org/fa25/projects/proj1/" target="_blank" rel="noopener noreferrer">Full Description</a>
+            <a class="btn small" href="https://github.com/Berkeley-CS61B-Student/sp24-proj3-g636" target="_blank" rel="noopener noreferrer">Code</a>
+            <a class="btn small secondary" href="https://drive.google.com/file/d/1GtR3-Fu1MzjbCDR7R5URLPZu8otScA_j/view?usp=sharing" target="_blank" rel="noopener noreferrer">Demo</a>
           </div>
         </article>
 
         <article class="card">
-          <h3>Classify</h3>
+          <h3>ABBS</h3>
           <div class="tech-tags">
-            <span class="tag">C</span><span class="tag">SIMD</span><span class="tag">Caching</span><span class="tag">Optimization</span>
+            <span class="tag">Swift</span><span class="tag">iOS</span>
           </div>
           <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Accelerated an image classifier by optimizing memory access patterns and computation kernels. Explored vectorization and cache-friendly layouts to reduce runtime while preserving correctness.</p>
+                <p>A's Before BaeS: Designing and building an application for students to find study partners. Users can create their own profile and swipe on other profiles to find ideal partners.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
           </div>
           <div class="project-links">
-            <a class="btn small" href="https://cs61c.org/fa25/projects/proj2/" target="_blank" rel="noopener noreferrer">Full Description</a>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>CS61CPU</h3>
-          <div class="tech-tags">
-            <span class="tag">CPU architecture</span><span class="tag">Digital design</span><span class="tag">Control/datapath</span><span class="tag">Pipelining</span>
-          </div>
-          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
-            <div class="flash-inner">
-              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
-              <div class="flash-face back">
-                <p>Designed a working CPU from first principles, integrating an ALU, register file, instruction decode, and control unit. Implemented and verified ISA functionality and hazards, then analyzed performance and correctness on test programs.</p>
-                <span class="flip-hint">↩ tap to flip back</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-links">
-            <a class="btn small" href="CS61CPU-Proj.pdf" target="_blank" rel="noopener noreferrer">Full Description</a>
+            <a class="btn small" href="https://github.com/ceciliasanjaya/ABBSproj" target="_blank" rel="noopener noreferrer">Code</a>
+            <a class="btn small secondary" href="https://www.figma.com/proto/2oUtuicJfaVV6lDtAbhmQr/Cubstart--ABBS-Final-Project?node-id=6-98832&t=m1NoXJrooZrj25j0-1&starting-point-node-id=6%3A98832" target="_blank" rel="noopener noreferrer">Demo</a>
           </div>
         </article>
 
@@ -1039,6 +1594,7 @@
         </article>
 
       </div>
+      </div><!-- /proj-software panel -->
     </section>
 
     <!-- SKILLS -->
@@ -1047,57 +1603,40 @@
         <div class="section-label">stack</div>
         <h2>Skills</h2>
       </div>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">A broad set of technical and analytical skills built through coursework, projects, and hands-on engineering experience.</p>
-      <div class="skills-grid">
-        <div class="skill-category">
-          <h3>Programming Languages</h3>
-          <ul>
-            <li>Python</li><li>C / C++</li><li>Java</li><li>Go</li><li>Swift</li><li>Verilog / SystemVerilog</li>
-          </ul>
+      <!-- Terminal intro -->
+      <div class="sec-terminal">
+        <div class="at-header">
+          <div class="at-dot r"></div><div class="at-dot y"></div><div class="at-dot g"></div>
+          <span class="at-title">cecilia@berkeley — skills.sh</span>
         </div>
-        <div class="skill-category">
-          <h3>Systems & Architecture</h3>
-          <ul>
-            <li>CPU & datapath design</li><li>Assembly & GDB</li><li>Memory hierarchy & caching</li><li>SIMD vectorization</li><li>OS & process security</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Hardware & Embedded Systems</h3>
-          <ul>
-            <li>FPGA (PYNQ, Vivado)</li><li>Digital logic</li><li>Microfabrication</li><li>MOSFET modeling</li><li>PCB & circuit design</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Integrated Circuits & Microelectronics</h3>
-          <ul>
-            <li>CMOS design (Cadence Virtuoso)</li><li>ASIC synthesis & timing</li><li>Analog & digital IC</li><li>Device characterization</li><li>LVS & DRC</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Hands-On Engineering & Lab</h3>
-          <ul>
-            <li>Oscilloscopes & logic analyzers</li><li>PCB assembly & soldering</li><li>Hardware debugging</li><li>Ion implantation & etching</li><li>LabVIEW & Python DAQ</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Machine Learning & AI</h3>
-          <ul>
-            <li>PyTorch (NN, RNN, classification)</li><li>Reinforcement learning & MDPs</li><li>Naive Bayes & Perceptron</li><li>Search algorithms (A*, minimax)</li><li>Probabilistic inference</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Security & Cryptography</h3>
-          <ul>
-            <li>Buffer overflow & exploitation</li><li>Secure system design</li><li>Public-key cryptography</li><li>Threat modeling</li>
-          </ul>
-        </div>
-        <div class="skill-category">
-          <h3>Software Engineering & Tools</h3>
-          <ul>
-            <li>Git & GitHub</li><li>Unix / shell scripting</li><li>Docker & CI/CD</li><li>Agile workflows</li><li>Figma & frontend (HTML/CSS/JS)</li>
-          </ul>
+        <div class="at-prompt"><span>$</span> cat skills.json</div>
+        <div class="sec-typed" id="sk-typed"><span class="at-cursor"></span></div>
+      </div>
+      <!-- Category buttons -->
+      <div class="sec-topics-wrap" id="sk-topics">
+        <div class="sec-topics-label">// select category</div>
+        <div class="sec-topics-grid">
+          <button class="sec-topic-btn" data-sectarget="sk-prog">programming</button>
+          <button class="sec-topic-btn" data-sectarget="sk-sys">systems</button>
+          <button class="sec-topic-btn ee-btn" data-sectarget="sk-hw">hardware</button>
+          <button class="sec-topic-btn ee-btn" data-sectarget="sk-ic">ic + microelectronics</button>
+          <button class="sec-topic-btn ee-btn" data-sectarget="sk-lab">lab + hands-on</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="sk-ml">ml + ai</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="sk-sec">security</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="sk-fs">full-stack</button>
+          <button class="sec-topic-btn" data-sectarget="sk-tools">dev tools</button>
         </div>
       </div>
+
+      <div class="sec-panel" id="sk-prog"><div class="skill-category"><h3>Programming Languages</h3><ul><li>Python</li><li>C / C++</li><li>Java</li><li>Go</li><li>TypeScript / JavaScript</li><li>Swift</li><li>Verilog / SystemVerilog</li></ul></div></div>
+      <div class="sec-panel" id="sk-sys"><div class="skill-category"><h3>Systems &amp; Architecture</h3><ul><li>CPU &amp; datapath design</li><li>Assembly &amp; GDB</li><li>Memory hierarchy &amp; caching</li><li>SIMD vectorization</li><li>OS &amp; process security</li></ul></div></div>
+      <div class="sec-panel" id="sk-hw"><div class="skill-category"><h3>Hardware &amp; Embedded Systems</h3><ul><li>FPGA (PYNQ, Vivado)</li><li>Digital logic</li><li>Microfabrication</li><li>MOSFET modeling</li><li>PCB &amp; circuit design</li></ul></div></div>
+      <div class="sec-panel" id="sk-ic"><div class="skill-category"><h3>Integrated Circuits &amp; Microelectronics</h3><ul><li>CMOS design (Cadence Virtuoso)</li><li>ASIC synthesis &amp; timing</li><li>Analog &amp; digital IC</li><li>Device characterization</li><li>LVS &amp; DRC</li></ul></div></div>
+      <div class="sec-panel" id="sk-lab"><div class="skill-category"><h3>Hands-On Engineering &amp; Lab</h3><ul><li>Oscilloscopes &amp; logic analyzers</li><li>PCB assembly &amp; soldering</li><li>Hardware debugging</li><li>Ion implantation &amp; etching</li><li>LabVIEW &amp; Python DAQ</li></ul></div></div>
+      <div class="sec-panel" id="sk-ml"><div class="skill-category"><h3>Machine Learning &amp; AI</h3><ul><li>PyTorch (NN, RNN, classification)</li><li>Reinforcement learning &amp; MDPs</li><li>Naive Bayes &amp; Perceptron</li><li>Search algorithms (A*, minimax)</li><li>Probabilistic inference</li></ul></div></div>
+      <div class="sec-panel" id="sk-sec"><div class="skill-category"><h3>Security &amp; Cryptography</h3><ul><li>Buffer overflow &amp; exploitation</li><li>Secure system design</li><li>Public-key cryptography</li><li>Threat modeling</li></ul></div></div>
+      <div class="sec-panel" id="sk-fs"><div class="skill-category"><h3>Full-Stack &amp; Cloud</h3><ul><li>Next.js / React</li><li>Node.js</li><li>TypeScript</li><li>Supabase (PostgreSQL + Auth)</li><li>Prisma ORM</li><li>Vercel deployment</li><li>Docker &amp; CI/CD</li><li>LLM integration (OpenAI, Anthropic)</li></ul></div></div>
+      <div class="sec-panel" id="sk-tools"><div class="skill-category"><h3>Software Engineering &amp; Tools</h3><ul><li>Git &amp; GitHub</li><li>Unix / shell scripting</li><li>Agile workflows</li><li>Figma &amp; UI/UX prototyping</li><li>HTML / CSS / JS</li></ul></div></div>
     </section>
 
     <!-- COURSES -->
@@ -1106,22 +1645,46 @@
         <div class="section-label">coursework</div>
         <h2>Relevant Courses</h2>
       </div>
-      <p class="course-note">// tap to view course description</p>
-      <ul class="course-list">
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16A/" target="_blank" rel="noopener noreferrer">EECS16A — Foundations of Signals, Dynamical Systems, and Information Processing</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16B/" target="_blank" rel="noopener noreferrer">EECS16B — Integrated Circuits &amp; Devices</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151/" target="_blank" rel="noopener noreferrer">EECS 151 — Digital Design and Integrated Circuits</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank" rel="noopener noreferrer">EECS 151LB — Field-Programmable Gate Array Laboratory (FPGA)</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EE130/" target="_blank" rel="noopener noreferrer">EE 130 — Integrated-Circuit Devices: electronic properties of semiconductor</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/EE143/" target="_blank" rel="noopener noreferrer">EE 143 — Integrated-Circuit Device Fabrication and Micromachining Technology</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61A/" target="_blank" rel="noopener noreferrer">CS 61A — Structure and Interpretation of Computer Programs</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61B/" target="_blank" rel="noopener noreferrer">CS 61B — Data Structures</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61C/" target="_blank" rel="noopener noreferrer">CS 61C — Great Ideas in Computer Architecture (Machine Structures)</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS70/" target="_blank" rel="noopener noreferrer">CS 70 — Discrete Mathematics and Probability Theory</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS188/" target="_blank" rel="noopener noreferrer">CS 188 — Artificial Intelligence</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS161/" target="_blank" rel="noopener noreferrer">CS 161 — Computer Security</a></li>
-        <li><a href="https://www2.eecs.berkeley.edu/Courses/CS168/" target="_blank" rel="noopener noreferrer">CS 168 — Internet: Architecture and Protocols</a></li>
-      </ul>
+      <!-- Terminal intro -->
+      <div class="sec-terminal">
+        <div class="at-header">
+          <div class="at-dot r"></div><div class="at-dot y"></div><div class="at-dot g"></div>
+          <span class="at-title">cecilia@berkeley — courses.sh</span>
+        </div>
+        <div class="at-prompt"><span>$</span> cat transcript.txt</div>
+        <div class="sec-typed" id="cr-typed"><span class="at-cursor"></span></div>
+      </div>
+      <!-- Category buttons -->
+      <div class="sec-topics-wrap" id="cr-topics">
+        <div class="sec-topics-label">// select category</div>
+        <div class="sec-topics-grid">
+          <button class="sec-topic-btn ee-btn" data-sectarget="cr-ee">ee courses</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="cr-cs">cs courses</button>
+        </div>
+      </div>
+
+      <div class="sec-panel" id="cr-ee">
+        <ul class="course-list">
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16A/" target="_blank" rel="noopener noreferrer">EECS16A — Foundations of Signals, Dynamical Systems, and Information Processing</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS16B/" target="_blank" rel="noopener noreferrer">EECS16B — Integrated Circuits &amp; Devices</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151/" target="_blank" rel="noopener noreferrer">EECS 151 — Digital Design and Integrated Circuits</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank" rel="noopener noreferrer">EECS 151LB — Field-Programmable Gate Array Laboratory (FPGA)</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EE130/" target="_blank" rel="noopener noreferrer">EE 130 — Integrated-Circuit Devices: electronic properties of semiconductor</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/EE143/" target="_blank" rel="noopener noreferrer">EE 143 — Integrated-Circuit Device Fabrication and Micromachining Technology</a></li>
+        </ul>
+      </div>
+
+      <div class="sec-panel" id="cr-cs">
+        <ul class="course-list">
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61A/" target="_blank" rel="noopener noreferrer">CS 61A — Structure and Interpretation of Computer Programs</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61B/" target="_blank" rel="noopener noreferrer">CS 61B — Data Structures</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS61C/" target="_blank" rel="noopener noreferrer">CS 61C — Great Ideas in Computer Architecture (Machine Structures)</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS70/" target="_blank" rel="noopener noreferrer">CS 70 — Discrete Mathematics and Probability Theory</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS188/" target="_blank" rel="noopener noreferrer">CS 188 — Artificial Intelligence</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS161/" target="_blank" rel="noopener noreferrer">CS 161 — Computer Security</a></li>
+          <li><a href="https://www2.eecs.berkeley.edu/Courses/CS168/" target="_blank" rel="noopener noreferrer">CS 168 — Internet: Architecture and Protocols</a></li>
+        </ul>
+      </div>
     </section>
 
   </main>
@@ -1133,8 +1696,553 @@
     </div>
   </footer>
 
+  <!-- FAQ Chatbot -->
+  <button class="chat-toggle" id="chat-toggle" aria-label="Open chat assistant">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="chat-notif"></span>
+  </button>
+
+  <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Portfolio assistant">
+    <div class="chat-header">
+      <div class="chat-avatar">✦</div>
+      <div>
+        <div class="chat-hname">Portfolio Assistant</div>
+        <div class="chat-hstatus">online</div>
+      </div>
+      <button class="chat-close" id="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-choices" id="chat-choices"></div>
+  </div>
+
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    /* ---- Mouse flashlight ---- */
+    document.addEventListener('mousemove', (e) => {
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    });
+
+    /* ---- Binary rain ---- */
+    (function() {
+      const canvas = document.getElementById('binary-canvas');
+      const ctx = canvas.getContext('2d');
+      let cols, drops;
+      const FONT_SIZE = 13;
+      const CHARS = '01';
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols  = Math.floor(canvas.width / FONT_SIZE);
+        drops = Array.from({ length: cols }, () => Math.random() * -80);
+      }
+
+      function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.055)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(41,121,255,0.55)';
+        ctx.font = FONT_SIZE + 'px "JetBrains Mono", monospace';
+        for (let i = 0; i < cols; i++) {
+          const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+          ctx.fillText(ch, i * FONT_SIZE, drops[i] * FONT_SIZE);
+          if (drops[i] * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.4;
+        }
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      setInterval(draw, 60);
+    })();
+
+    /* ---- Shared section typing + topic button system ---- */
+    (function() {
+      // Config: [typed-el-id, topics-wrap-id, text, section-id]
+      const sections = [
+        ['proj-typed', 'proj-topics', '25+ projects across hardware, AI, security, and software.', 'projects'],
+        ['sk-typed',   'sk-topics',   'Technical stack spanning EE and CS — silicon to software.',  'skills'],
+        ['cr-typed',   'cr-topics',   'Coursework at UC Berkeley — EECS.',                           'courses'],
+      ];
+
+      sections.forEach(([typedId, wrapId, text, sectionId]) => {
+        const el   = document.getElementById(typedId);
+        const wrap = document.getElementById(wrapId);
+        if (!el || !wrap) return;
+        const cursor = '<span class="at-cursor"></span>';
+        let i = 0, started = false;
+        const section = document.getElementById(sectionId);
+        const obs = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting && !started) {
+            started = true;
+            const iv = setInterval(() => {
+              if (i < text.length) { el.innerHTML = text.slice(0, ++i) + cursor; }
+              else { clearInterval(iv); setTimeout(() => wrap.classList.add('vis'), 400); }
+            }, 42);
+          }
+        }, { threshold: 0.15 });
+        if (section) obs.observe(section);
+      });
+
+      // Unified toggle handler for all sec-topic-btns
+      // Clicking a button toggles that panel open/closed; multiple can be open at once
+      document.querySelectorAll('.sec-topic-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.sectarget;
+          const panel = document.getElementById(id);
+          if (!panel) return;
+
+          const isOpen = panel.classList.contains('active');
+          if (isOpen) {
+            panel.classList.remove('active');
+            btn.classList.remove('active');
+          } else {
+            panel.classList.add('active');
+            btn.classList.add('active');
+            // Pop-in cards inside newly opened project panels
+            panel.querySelectorAll('.card').forEach((card, i) => {
+              card.style.animation = 'none';
+              void card.offsetWidth;
+              card.style.animation = `cardPopIn 0.36s cubic-bezier(0.34,1.56,0.64,1) ${i * 60}ms both`;
+            });
+          }
+        });
+      });
+    })();
+
+    /* ---- About section typing + topic switcher ---- */
+    (function() {
+      const el   = document.getElementById('at-typed');
+      const wrap = document.getElementById('ab-topics-wrap');
+      if (!el) return;
+      const text   = 'Hi! I\'m Cecilia Sanjaya.';
+      const cursor = '<span class="at-cursor"></span>';
+      let i = 0;
+
+      // Use IntersectionObserver so it only triggers when section is visible
+      const section = document.getElementById('about');
+      let started = false;
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && !started) {
+          started = true;
+          const iv = setInterval(() => {
+            if (i < text.length) { el.innerHTML = text.slice(0, ++i) + cursor; }
+            else { clearInterval(iv); setTimeout(() => wrap.classList.add('vis'), 450); }
+          }, 55);
+        }
+      }, { threshold: 0.3 });
+      if (section) observer.observe(section);
+
+      // Topic buttons — toggle open/close
+      document.querySelectorAll('.ab-topic-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = 'abp-' + btn.dataset.abtopic;
+          const panel = document.getElementById(id);
+          const isOpen = btn.classList.contains('active');
+          // Close all first
+          document.querySelectorAll('.ab-topic-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.ab-panel').forEach(p => p.classList.remove('active'));
+          // If it wasn't already open, open it
+          if (!isOpen && panel) {
+            btn.classList.add('active');
+            void panel.offsetWidth;
+            panel.classList.add('active');
+          }
+        });
+      });
+    })();
+
+    /* ---- Search ---- */
+    (function() {
+      const input   = document.getElementById('search-input');
+      const countEl = document.getElementById('search-count');
+      if (!input) return;
+
+      const saved = new Map();       // el → original innerHTML
+      const autoExp = new Set();     // grids auto-expanded by search
+
+      function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+      function hi(text, q) {
+        return text.replace(new RegExp(esc(q), 'gi'), m => `<mark class="sh">${m}</mark>`);
+      }
+      function has(text, q) { return new RegExp(esc(q), 'i').test(text); }
+
+      function saveAndReplace(el, newHTML) {
+        if (!saved.has(el)) saved.set(el, el.innerHTML);
+        el.innerHTML = newHTML;
+      }
+
+      function clearAll() {
+        saved.forEach((orig, el) => { el.innerHTML = orig; });
+        saved.clear();
+        document.querySelectorAll('.sdim,.smatch').forEach(el => el.classList.remove('sdim','smatch'));
+        autoExp.forEach(el => {
+          el.classList.remove('expanded', 'active');
+          // Remove active from corresponding button if it was auto-added
+          const btn = document.querySelector(`.sec-topic-btn[data-sectarget="${el.id}"]`);
+          if (btn) btn.classList.remove('active');
+          // Legacy: project-sub-label grids
+          if (el.previousElementSibling) el.previousElementSibling.classList.remove('open');
+        });
+        autoExp.clear();
+        if (countEl) countEl.textContent = '';
+      }
+
+      function doSearch(q) {
+        q = q.trim();
+        if (!q) { clearAll(); return; }
+
+        // Restore stale highlights first
+        saved.forEach((orig, el) => { el.innerHTML = orig; });
+        saved.clear();
+
+        let total = 0;
+
+        // --- Cards ---
+        document.querySelectorAll('.card').forEach(card => {
+          const h3   = card.querySelector('h3');
+          const tags = [...card.querySelectorAll('.tag')];
+          const txt  = (h3 ? h3.textContent : '') + ' ' + tags.map(t => t.textContent).join(' ');
+
+          if (has(txt, q)) {
+            card.classList.replace('sdim','smatch') || card.classList.add('smatch');
+            card.classList.remove('sdim');
+            total++;
+            if (h3) saveAndReplace(h3, hi(h3.textContent, q));
+            tags.forEach(tag => {
+              if (has(tag.textContent, q)) saveAndReplace(tag, hi(tag.textContent, q));
+            });
+          } else {
+            card.classList.remove('smatch');
+            card.classList.add('sdim');
+          }
+        });
+
+        // --- Skill categories ---
+        document.querySelectorAll('.skill-category').forEach(cat => {
+          const h3    = cat.querySelector('h3');
+          const items = [...cat.querySelectorAll('li')];
+          const txt   = (h3 ? h3.textContent : '') + ' ' + items.map(i => i.textContent).join(' ');
+
+          if (has(txt, q)) {
+            cat.classList.remove('sdim');
+            cat.classList.add('smatch');
+            total++;
+            items.forEach(li => {
+              if (has(li.textContent, q)) saveAndReplace(li, hi(li.textContent, q));
+            });
+          } else {
+            cat.classList.remove('smatch');
+            cat.classList.add('sdim');
+          }
+        });
+
+        // --- Courses ---
+        document.querySelectorAll('.course-list li').forEach(li => {
+          const link = li.querySelector('a');
+          if (!link) return;
+          if (has(link.textContent, q)) {
+            li.classList.remove('sdim');
+            li.classList.add('smatch');
+            total++;
+            saveAndReplace(link, hi(link.textContent, q));
+          } else {
+            li.classList.remove('smatch');
+            li.classList.add('sdim');
+          }
+        });
+
+
+        if (countEl) countEl.textContent = total ? total + (total === 1 ? ' match' : ' matches') : 'no matches';
+
+        // Auto-reveal sec-panels containing matches (for projects/skills/courses)
+        document.querySelectorAll('.sec-panel').forEach(panel => {
+          const hasMatch = panel.querySelector('.smatch, .card.smatch, .skill-category.smatch, .course-list li.smatch');
+          if (hasMatch && !panel.classList.contains('active')) {
+            panel.classList.add('active');
+            autoExp.add(panel);
+            // Also mark the corresponding button active
+            const btn = document.querySelector(`.sec-topic-btn[data-sectarget="${panel.id}"]`);
+            if (btn) btn.classList.add('active');
+          }
+        });
+
+        // Scroll to first visible match
+        const first = document.querySelector('.card.smatch, .skill-category.smatch, .course-list li.smatch');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      input.addEventListener('input', () => doSearch(input.value));
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { input.value = ''; clearAll(); input.blur(); }
+      });
+      // Global Ctrl+F / Cmd+F shortcut → focus search
+      document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+    })();
+
+    /* ---- FAQ Chatbot ---- */
+    (function() {
+      const toggle   = document.getElementById('chat-toggle');
+      const panel    = document.getElementById('chat-panel');
+      const closeBtn = document.getElementById('chat-close');
+      const msgs     = document.getElementById('chat-messages');
+      const choices  = document.getElementById('chat-choices');
+      if (!toggle || !panel) return;
+
+      let otherCount = 0;
+
+      const FAQ = {
+        start: {
+          msg: "Hi! I'm Cecilia's portfolio assistant ✦\nWhat brings you here today?",
+          choices: [
+            { label: "Recruiting — Software / Full-Stack", next: "swe" },
+            { label: "Recruiting — Hardware / EE", next: "ee" },
+            { label: "Exploring her projects", next: "projects" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        swe: {
+          msg: "Cecilia has hands-on full-stack experience with Next.js, TypeScript, Node.js, Supabase, Docker, and LLM integration. What's the role type?",
+          choices: [
+            { label: "Internship / co-op", next: "swe_intern" },
+            { label: "Full-time / new grad", next: "swe_ft" },
+            { label: "Research collaboration", next: "research" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        swe_intern: {
+          msg: "She's actively looking for Summer 2026 internships. Her AI Integrated Website project and Secure File Sharing System both demonstrate real production-ready engineering. Want to reach out?",
+          choices: [
+            { label: "Yes, email her!", next: "email" },
+            { label: "Tell me more first", next: "more_swe" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        swe_ft: {
+          msg: "Cecilia graduates in 2027. She's open to new grad roles and exploring opportunities. She'd love to connect!",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        more_swe: {
+          msg: "She's built systems with tier-based access control, usage tracking, CI/CD pipelines, and Anthropic/OpenAI API integration. Her GitHub has more details.",
+          choices: [
+            { label: "Email her!", next: "email" },
+            { label: "Check her GitHub", next: "github" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        ee: {
+          msg: "Cecilia is a UC Berkeley EECS student with experience in FPGA design, IC fabrication, MOSFET modeling, and embedded systems. Any specific area?",
+          choices: [
+            { label: "FPGA / Digital design", next: "ee_fpga" },
+            { label: "IC / Microelectronics", next: "ee_ic" },
+            { label: "Embedded / PCB", next: "ee_embedded" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        ee_fpga: {
+          msg: "She's currently building a full RISC-V processor on FPGA (Vivado, Verilog) with caches, graphics acceleration, and peripheral I/O — part of EECS 151LB at Berkeley.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        ee_ic: {
+          msg: "She fabricated MOS transistors on silicon wafers (EE 143) and modeled NMOSFETs across all operating regions using SPICE. Tools include Cadence Virtuoso and ASIC synthesis flow.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        ee_embedded: {
+          msg: "She's built a PCB smartwatch (KiCad + ESP32), a voice-controlled car (Arduino + DSP), and an electric guitar treble boost circuit — hands-on hardware through and through.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        projects: {
+          msg: "Her projects span 4 categories. Which area interests you?",
+          choices: [
+            { label: "EE / Hardware", next: "ee" },
+            { label: "Security & Systems", next: "security" },
+            { label: "AI / Machine Learning", next: "ai" },
+            { label: "Software & Applications", next: "software" }
+          ]
+        },
+        security: {
+          msg: "She built an end-to-end encrypted file sharing system in Go (with asymmetric keys, HMACs, revocation) and performed hands-on buffer overflow exploitation — solid CS 161 chops.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        ai: {
+          msg: "Her AI work covers search (A*, minimax, expectimax), reinforcement learning, probabilistic inference (Bayes nets, HMMs), and classic ML classifiers — all from CS 188 at Berkeley.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        software: {
+          msg: "She's built a Java tile-world game, a Swift iOS study-partner app (ABBS), data structure implementations, a Scheme interpreter, and more. Strong CS fundamentals.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        research: {
+          msg: "She's open to research collaborations in EE, AI systems, or hardware-software co-design. UC Berkeley CS/EE faculty or industry labs — she'd love to connect.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        github: {
+          msg: "Check out github.com/ceciliasanjaya for her code. Want to reach out directly?",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        other: {
+          msg: "Got it! Is there something specific I can help with?",
+          choices: [
+            { label: "About Cecilia", next: "about_q" },
+            { label: "Her skills & stack", next: "skills_q" },
+            { label: "Contact / resume", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        about_q: {
+          msg: "Cecilia is a UC Berkeley EECS junior (Class of 2027) from Indonesia, passionate about hardware-software co-design and AI systems. She loves building things that actually work.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        skills_q: {
+          msg: "Strong in Python, C/C++, Java, Go, TypeScript, and Verilog. Toolset: Next.js, Node.js, Supabase, Docker, FPGA (Vivado), Cadence Virtuoso, SPICE. Both EE and CS.",
+          choices: [
+            { label: "Email her", next: "email" },
+            { label: "Other", next: "other", isOther: true }
+          ]
+        },
+        email: {
+          msg: "Great! Click below to reach Cecilia directly — she typically responds within a day. 📬",
+          choices: [],
+          emailCTA: true
+        },
+        give_up: {
+          msg: "It seems like I might not be covering what you need! The best next step is to email Cecilia directly — she'd love to hear from you. 💙",
+          choices: [],
+          emailCTA: true
+        }
+      };
+
+      function addBubble(text, role) {
+        const b = document.createElement('div');
+        b.className = 'chat-bubble ' + role;
+        b.textContent = text;
+        msgs.appendChild(b);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function renderState(key) {
+        const node = FAQ[key];
+        if (!node) return;
+
+        setTimeout(() => {
+          addBubble(node.msg, 'bot');
+          choices.innerHTML = '';
+
+          if (node.emailCTA) {
+            const a = document.createElement('a');
+            a.className = 'chat-email-link';
+            a.href = 'mailto:cecs@berkeley.edu?subject=Inquiry%20from%20Portfolio&body=Hi%20Cecilia%2C%0A%0A';
+            a.textContent = '✉  cecs@berkeley.edu';
+            choices.appendChild(a);
+          }
+
+          node.choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'chat-choice';
+            btn.textContent = c.label;
+            btn.addEventListener('click', () => {
+              addBubble(c.label, 'user');
+              choices.innerHTML = '';
+              if (c.isOther) {
+                otherCount++;
+                if (otherCount >= 4) { renderState('give_up'); return; }
+              }
+              renderState(c.next);
+            });
+            choices.appendChild(btn);
+          });
+
+          // Restart link
+          if (key !== 'start') {
+            const rb = document.createElement('button');
+            rb.className = 'chat-restart-btn';
+            rb.textContent = '↩ restart';
+            rb.addEventListener('click', () => {
+              msgs.innerHTML = '';
+              choices.innerHTML = '';
+              otherCount = 0;
+              renderState('start');
+            });
+            choices.appendChild(rb);
+          }
+        }, 220);
+      }
+
+      function openChat() {
+        panel.classList.add('open');
+        toggle.querySelector('.chat-notif').style.display = 'none';
+        if (!msgs.children.length) renderState('start');
+      }
+
+      toggle.addEventListener('click', () => {
+        if (panel.classList.contains('open')) panel.classList.remove('open');
+        else openChat();
+      });
+      closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+      // Show notif dot after 3s to nudge recruiters
+      setTimeout(() => {
+        if (!panel.classList.contains('open')) {
+          toggle.querySelector('.chat-notif').style.display = '';
+        }
+      }, 3000);
+    })();
+
+    /* ---- Sidebar active section highlight ---- */
+    (function() {
+      const links = document.querySelectorAll('.left-sidebar a[data-section]');
+      const sections = [...links].map(l => document.getElementById(l.dataset.section)).filter(Boolean);
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('active'));
+            const active = document.querySelector(`.left-sidebar a[data-section="${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+
+      sections.forEach(s => io.observe(s));
+    })();
   </script>
 </body>
 </html>

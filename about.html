@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — Cecilia Sanjaya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #000000; --surface: #080808; --card: #0c0c0c;
+      --border: rgba(41,121,255,0.14); --border-hover: rgba(41,121,255,0.4);
+      --fg: #ffffff; --muted: #848499; --accent: #2979ff; --accent2: #a78bfa;
+      --green: #00e676; --radius: 10px;
+      --mono: 'JetBrains Mono', monospace; --sans: 'Inter', system-ui, sans-serif;
+      --glow: 0 0 24px rgba(41,121,255,0.15);
+      --mx: -999px; --my: -999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: var(--sans); font-size: 15px;
+      line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      background: radial-gradient(circle 300px at var(--mx) var(--my), rgba(255,255,255,0.028) 0%, transparent 100%);
+      transition: background 0.08s;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--fg); }
+    #binary-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.18; }
+
+    /* Sidebar */
+    .left-sidebar {
+      position: fixed; left: 0; top: 56px; bottom: 0; width: 110px;
+      padding: 48px 0 40px 0; display: flex; flex-direction: column; gap: 2px;
+      z-index: 50; border-right: 1px solid var(--border);
+    }
+    .left-sidebar a {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      padding: 10px 18px; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: color 0.15s, background 0.15s, transform 0.15s; display: block;
+    }
+    .left-sidebar a:hover { color: var(--fg); background: rgba(41,121,255,0.06); transform: translateX(3px); }
+    nav, main, footer { margin-left: 110px; }
+    @media (max-width: 768px) { .left-sidebar { display: none; } nav, main, footer { margin-left: 0; } }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.82); backdrop-filter: blur(16px);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px; max-width: 1100px; margin: 0 auto;
+      padding-inline: clamp(20px, 5vw, 48px);
+    }
+    .brand { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+    .brand::before { content: '> '; opacity: 0.45; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a {
+      font-size: 13px; color: var(--muted); padding: 6px 12px;
+      border-radius: 6px; transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--fg); background: rgba(255,255,255,0.05); }
+
+    /* Main */
+    main {
+      position: relative; z-index: 1;
+      max-width: 780px; margin-inline: auto;
+      padding: 64px clamp(20px, 5vw, 48px) 80px;
+    }
+
+    /* Terminal intro block */
+    .terminal-block {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px;
+    }
+    .terminal-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #ff5f57; } .dot.yellow { background: #febc2e; } .dot.green { background: #28c840; }
+    .t-title { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 6px; }
+    .t-prompt { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .t-prompt span { color: var(--accent); }
+    .t-output {
+      font-family: var(--mono); font-size: clamp(15px, 2vw, 18px);
+      color: var(--fg); line-height: 1.5; min-height: 1.5em;
+    }
+    .tcursor {
+      display: inline-block; width: 2px; height: 1.1em;
+      background: var(--accent); margin-left: 2px;
+      vertical-align: text-bottom; animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Topic buttons */
+    .topics-wrap {
+      opacity: 0; pointer-events: none; transition: opacity 0.4s;
+    }
+    .topics-wrap.visible { opacity: 1; pointer-events: auto; }
+    .topics-label {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;
+    }
+    .topics-grid {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .topic-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--fg); font-size: 13px;
+      padding: 9px 18px; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      font-family: var(--sans);
+    }
+    .topic-btn:hover { background: rgba(41,121,255,0.1); border-color: var(--border-hover); transform: translateY(-1px); }
+    .topic-btn.active { background: rgba(41,121,255,0.14); border-color: var(--accent); color: var(--accent); }
+
+    /* Content panels */
+    .content-area { margin-top: 40px; }
+    .panel {
+      display: none;
+      animation: fadeUp 0.35s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .panel.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .panel-label {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; opacity: 0.7;
+    }
+    .panel-label::before { content: '// '; }
+    .panel h2 { font-size: 22px; font-weight: 700; margin-bottom: 18px; color: var(--fg); }
+
+    .panel p {
+      color: var(--muted); font-size: 14px; line-height: 1.85; margin-bottom: 14px;
+    }
+    .panel p strong { color: var(--fg); font-weight: 600; }
+    .panel p em { color: var(--accent2); font-style: normal; }
+
+    /* Stat cards */
+    .stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 20px; min-width: 140px;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border-hover); }
+    .stat-val { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+    .stat-key { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 16px; }
+    .tl-item {
+      display: grid; grid-template-columns: 90px 1fr;
+      gap: 0 20px; align-items: start;
+    }
+    .tl-year { font-family: var(--mono); font-size: 12px; color: var(--accent); padding-top: 2px; }
+    .tl-content {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+    }
+    .tl-content h4 { font-size: 14px; font-weight: 600; color: var(--fg); margin-bottom: 4px; }
+    .tl-content p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+    /* Tag cloud */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tag-item {
+      font-family: var(--mono); font-size: 11px;
+      padding: 4px 10px; border-radius: 5px;
+      background: rgba(41,121,255,0.07); color: var(--accent);
+      border: 1px solid rgba(41,121,255,0.14);
+    }
+
+    /* CTA */
+    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.04);
+      color: var(--fg); cursor: pointer; transition: all 0.15s; text-decoration: none;
+    }
+    .btn:hover { border-color: var(--border-hover); background: rgba(41,121,255,0.07); color: var(--fg); }
+    .btn.primary { background: var(--accent); color: #080c14; border-color: transparent; font-weight: 600; }
+    .btn.primary:hover { background: #93c5fd; color: #080c14; }
+
+    footer {
+      position: relative; z-index: 1;
+      padding: 24px clamp(20px, 5vw, 48px);
+      border-top: 1px solid var(--border); text-align: center;
+    }
+    footer p { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<canvas id="binary-canvas"></canvas>
+
+<aside class="left-sidebar">
+  <a href="index.html">Home</a>
+  <a href="index.html#projects">Projects</a>
+  <a href="index.html#skills">Skills</a>
+  <a href="index.html#courses">Courses</a>
+</aside>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="brand">cecilia_sanjaya</a>
+    <div class="nav-links">
+      <a href="index.html">← back</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Terminal intro -->
+  <div class="terminal-block">
+    <div class="terminal-header">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+      <span class="t-title">cecilia@berkeley — about.sh</span>
+    </div>
+    <div class="t-prompt"><span>$</span> ./intro.sh</div>
+    <div class="t-output" id="t-output"><span class="tcursor"></span></div>
+  </div>
+
+  <!-- Topic selector (fades in after typing) -->
+  <div class="topics-wrap" id="topics-wrap">
+    <div class="topics-label">// click to learn more about me</div>
+    <div class="topics-grid" id="topics-grid">
+      <button class="topic-btn" data-topic="background">🌏 Background</button>
+      <button class="topic-btn" data-topic="engineering">⚡ Engineering</button>
+      <button class="topic-btn" data-topic="goals">🚀 Goals</button>
+      <button class="topic-btn" data-topic="outside">🏔 Outside of Work</button>
+      <button class="topic-btn" data-topic="fun">✨ Fun Facts</button>
+    </div>
+  </div>
+
+  <!-- Content panels -->
+  <div class="content-area">
+
+    <!-- Background -->
+    <div class="panel" id="panel-background">
+      <div class="panel-label">background</div>
+      <h2>Where I'm From</h2>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-val">Jakarta</div><div class="stat-key">where I was born</div></div>
+        <div class="stat-card"><div class="stat-val">Irvine, CA</div><div class="stat-key">where I grew up (USA)</div></div>
+        <div class="stat-card"><div class="stat-val">Berkeley</div><div class="stat-key">where I study now</div></div>
+      </div>
+      <p>I was born and raised in <strong>Indonesia</strong>, where I spent my first 12 years before my family moved to <em>Irvine, California</em>. Growing up between two very different environments — the vibrant, chaotic energy of Jakarta and the sunny, suburban calm of Southern California — taught me to adapt quickly, stay curious, and appreciate different perspectives.</p>
+      <p>That sense of adaptability has followed me everywhere, especially into engineering. When you've had to rebuild your world from scratch more than once, you get pretty comfortable with ambiguity and learning from scratch.</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2003</div>
+          <div class="tl-content"><h4>Born in Jakarta, Indonesia</h4><p>Started life in one of the world's most dynamic cities.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2015</div>
+          <div class="tl-content"><h4>Moved to Irvine, California</h4><p>Big cultural shift — new language fluency, new school, new everything.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2023</div>
+          <div class="tl-content"><h4>Started at UC Berkeley — EECS</h4><p>Admitted to the #1 public university for Electrical Engineering and CS.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Engineering -->
+    <div class="panel" id="panel-engineering">
+      <div class="panel-label">engineering</div>
+      <h2>Why I Build</h2>
+      <p>Engineering, to me, isn't just about code or circuits — it's about <strong>understanding the foundations of the modern world</strong> and using that knowledge to create things that matter. I'm fascinated by how things work at every level, from silicon to software.</p>
+      <p>What I love most is the creative side: taking an idea from imagination to reality. Whether it's fabricating a transistor on a silicon wafer, designing a RISC-V processor, or deploying a full-stack AI platform — the thread that connects everything is the <em>process of figuring it out</em>.</p>
+      <p>I'm particularly drawn to the intersection of <strong>hardware and AI</strong> — where the physical constraints of silicon meet the limitless possibilities of intelligent systems. It's a space that feels like the frontier of everything interesting.</p>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-val">25+</div><div class="stat-key">projects completed</div></div>
+        <div class="stat-card"><div class="stat-val">EE + CS</div><div class="stat-key">dual-domain expertise</div></div>
+        <div class="stat-card"><div class="stat-val">4</div><div class="stat-key">programming paradigms</div></div>
+      </div>
+      <div class="tag-cloud">
+        <span class="tag-item">FPGA Design</span>
+        <span class="tag-item">IC Fabrication</span>
+        <span class="tag-item">AI Systems</span>
+        <span class="tag-item">Full-Stack Dev</span>
+        <span class="tag-item">Computer Security</span>
+        <span class="tag-item">Machine Learning</span>
+        <span class="tag-item">Embedded Systems</span>
+        <span class="tag-item">Cryptography</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="index.html#projects">View Projects →</a>
+        <a class="btn" href="index.html#skills">See Full Stack →</a>
+      </div>
+    </div>
+
+    <!-- Goals -->
+    <div class="panel" id="panel-goals">
+      <div class="panel-label">goals</div>
+      <h2>Where I'm Headed</h2>
+      <p>My long-term goal is to contribute to technologies that <strong>advance the future of computing</strong> — from the silicon level to intelligent systems. I want to build tools that have a meaningful, lasting impact on how people interact with technology.</p>
+      <p>Right now I'm exploring the convergence of <em>hardware architecture and AI inference</em> — how we design chips that can run intelligent workloads efficiently. I think the next decade of computing breakthroughs will live at that boundary.</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2025–26</div>
+          <div class="tl-content"><h4>Summer Internship</h4><p>Looking for roles in SWE, hardware, or AI systems — somewhere building real things at scale.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2027</div>
+          <div class="tl-content"><h4>Graduation — B.S. EECS, UC Berkeley</h4><p>Complete degree with a focus on computer architecture and AI systems.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">Beyond</div>
+          <div class="tl-content"><h4>Hardware-AI Co-design</h4><p>Contribute to the next generation of computing — from silicon to intelligent systems.</p></div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a class="btn primary" href="resume.html">Request Resume</a>
+        <a class="btn" href="mailto:cecs@berkeley.edu">Email Me</a>
+      </div>
+    </div>
+
+    <!-- Outside of work -->
+    <div class="panel" id="panel-outside">
+      <div class="panel-label">outside of work</div>
+      <h2>Life Outside Engineering</h2>
+      <p>I want to live a life <strong>full of experiences</strong>. Engineering is a huge part of who I am, but it's not all of me. I love being active and outdoors — hiking, trying new sports, exploring new places. There's something about physical challenge that resets the mind in a way that no screen can.</p>
+      <p>At the same time, I genuinely love quiet time: learning new skills for no reason other than curiosity, working on creative projects, or just reading something completely unrelated to engineering. I think the best engineers have wide-ranging interests.</p>
+      <p>Growing up between Indonesia and California also means I have a deep appreciation for <em>food, culture, and travel</em>. There's no better way to understand the world — or to think differently — than experiencing how other people live.</p>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-val">2</div><div class="stat-key">countries called home</div></div>
+        <div class="stat-card"><div class="stat-val">∞</div><div class="stat-key">curiosity</div></div>
+      </div>
+    </div>
+
+    <!-- Fun facts -->
+    <div class="panel" id="panel-fun">
+      <div class="panel-label">fun facts</div>
+      <h2>Things You Might Not Know</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">🌏</div>
+          <div class="tl-content"><h4>Bilingual</h4><p>Fluent in English and Indonesian. I think in both, sometimes at the same time.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">🔬</div>
+          <div class="tl-content"><h4>I've fabricated a transistor</h4><p>Literally made a working MOSFET on a silicon wafer in a cleanroom. Not everyone can say that.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">🎸</div>
+          <div class="tl-content"><h4>Built an electric guitar amplifier circuit</h4><p>Then played through it. Engineering + music in one project.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">🤖</div>
+          <div class="tl-content"><h4>This website has a chatbot</h4><p>Go back to the main page and try the chat icon in the bottom right. I made it. 😄</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">💡</div>
+          <div class="tl-content"><h4>I really like building things</h4><p>Software, hardware, circuits, apps — if I can make something from nothing, I'm in.</p></div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="index.html#projects">See What I've Built →</a>
+      </div>
+    </div>
+
+  </div><!-- end content-area -->
+
+</main>
+
+<footer>
+  <p>cecilia sanjaya · eecs @ uc berkeley</p>
+</footer>
+
+<script>
+  /* ── Binary rain ── */
+  (function() {
+    const canvas = document.getElementById('binary-canvas');
+    const ctx = canvas.getContext('2d');
+    let cols, drops;
+    const FS = 13;
+    function init() {
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      cols = Math.floor(canvas.width / FS);
+      drops = Array.from({ length: cols }, () => Math.random() * -80);
+    }
+    init(); window.addEventListener('resize', init);
+    function draw() {
+      ctx.fillStyle = 'rgba(0,0,0,0.055)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = 'rgba(41,121,255,0.55)'; ctx.font = FS + 'px "JetBrains Mono",monospace';
+      for (let i = 0; i < cols; i++) {
+        ctx.fillText(Math.random() > 0.5 ? '1' : '0', i * FS, drops[i] * FS);
+        if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.4;
+      }
+    }
+    setInterval(draw, 60);
+  })();
+
+  /* ── Mouse flashlight ── */
+  document.addEventListener('mousemove', e => {
+    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+    document.documentElement.style.setProperty('--my', e.clientY + 'px');
+  });
+
+  /* ── Typing animation ── */
+  (function() {
+    const text = 'Hi, I\'m Cecilia Sanjaya.';
+    const el   = document.getElementById('t-output');
+    const wrap = document.getElementById('topics-wrap');
+    let i = 0;
+    const cursor = '<span class="tcursor"></span>';
+    setTimeout(() => {
+      const iv = setInterval(() => {
+        if (i < text.length) {
+          el.innerHTML = text.slice(0, ++i) + cursor;
+        } else {
+          clearInterval(iv);
+          setTimeout(() => { wrap.classList.add('visible'); }, 500);
+        }
+      }, 55);
+    }, 600);
+  })();
+
+  /* ── Topic switcher ── */
+  (function() {
+    const btns   = document.querySelectorAll('.topic-btn');
+    const panels = document.querySelectorAll('.panel');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const topic = btn.dataset.topic;
+
+        // Toggle active on button
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show corresponding panel
+        panels.forEach(p => p.classList.remove('active'));
+        const panel = document.getElementById('panel-' + topic);
+        if (panel) {
+          // Remove + re-add to re-trigger animation
+          panel.classList.remove('active');
+          void panel.offsetWidth;
+          panel.classList.add('active');
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
