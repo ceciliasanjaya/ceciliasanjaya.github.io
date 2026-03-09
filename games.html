@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games — cecilia.sanjaya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #000000; --fg: #e8e8f0;
+      --border: rgba(255,255,255,0.08);
+      --card: #0a0a0f;
+      --mono: 'JetBrains Mono', monospace;
+      --accent: #2979ff;
+      --green: #00ff88;
+    }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: var(--mono);
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto;
+      padding: 0 clamp(16px,4vw,48px);
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .brand { font-size: 13px; color: var(--accent); letter-spacing: 0.02em; text-decoration: none; }
+    .brand::before { content: '> '; opacity: 0.45; }
+    .back-btn { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.15s; }
+    .back-btn:hover { color: var(--fg); }
+
+    /* Page */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 clamp(16px,4vw,48px); }
+    header.page-header { padding: 52px 0 36px; }
+    .section-label { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 6px; }
+    h1 { font-family: 'Orbitron', var(--mono); font-size: clamp(22px,3.5vw,36px); font-weight: 900; letter-spacing: 0.04em; margin-bottom: 10px; }
+    .page-sub { font-size: 13px; color: rgba(255,255,255,0.35); }
+
+    /* Games grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding-bottom: 60px;
+    }
+
+    /* Game card */
+    .game-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .game-card:hover {
+      border-color: rgba(0,255,136,0.35);
+      box-shadow: 0 0 0 1px rgba(0,255,136,0.12), 0 8px 32px rgba(0,255,136,0.1);
+    }
+    .game-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .game-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .game-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2);
+      color: var(--green);
+    }
+    .game-title { font-family: 'Orbitron', var(--mono); font-size: 15px; font-weight: 700; letter-spacing: 0.06em; color: var(--fg); }
+    .game-subtitle { font-size: 11px; color: rgba(0,255,136,0.5); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+    .game-divider { border: none; border-top: 1px solid var(--border); }
+
+    /* Flip card for how-to-play */
+    .how-flip {
+      position: relative;
+      height: 160px;
+      border-radius: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .how-face {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: rgba(0,255,136,0.03);
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
+    }
+    .how-face.front {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; z-index: 2;
+    }
+    .how-face.back { z-index: 1; opacity: 0; }
+    .how-flip.flipped .how-face.front { opacity: 0; z-index: 1; }
+    .how-flip.flipped .how-face.back  { opacity: 1; z-index: 2; }
+
+    .how-flip-label {
+      font-family: 'Orbitron', var(--mono);
+      font-size: 13px; font-weight: 700;
+      color: var(--green); letter-spacing: 0.1em;
+      text-align: center;
+    }
+    .how-flip-hint {
+      font-size: 10px; color: rgba(0,255,136,0.35);
+      letter-spacing: 0.12em;
+    }
+
+    .how-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .how-list li {
+      font-size: 11px; color: rgba(255,255,255,0.5);
+      line-height: 1.5; display: flex; gap: 7px; align-items: baseline;
+    }
+    .how-list li::before { content: '—'; color: rgba(0,255,136,0.35); flex-shrink: 0; }
+    .back-label {
+      font-size: 9px; color: rgba(0,255,136,0.25);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    /* Play button */
+    .play-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 0; border-radius: 8px;
+      background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.28);
+      color: var(--green); font-family: var(--mono); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.12em; text-decoration: none;
+      transition: all 0.15s; margin-top: auto;
+    }
+    .play-btn:hover {
+      background: rgba(0,255,136,0.15); border-color: rgba(0,255,136,0.55);
+      box-shadow: 0 0 16px rgba(0,255,136,0.2);
+    }
+
+    @media (max-width: 480px) { .games-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="brand" href="index.html">cecilia.sanjaya</a>
+      <a class="back-btn" href="index.html">← back to portfolio</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="page-header">
+      <div class="section-label">// games</div>
+      <h1>Mini Games</h1>
+      <p class="page-sub">A few fun things built into the site.</p>
+    </header>
+
+    <div class="games-grid">
+
+      <!-- Wavelength -->
+      <div class="game-card" onclick="location.href='game.html'">
+        <div class="game-card-top">
+          <div class="game-icon">&#9685;</div>
+          <span class="game-badge">2+ Players</span>
+        </div>
+        <div>
+          <div class="game-title">WAVELENGTH</div>
+          <div class="game-subtitle">Psychic Board Game</div>
+        </div>
+        <hr class="game-divider">
+
+        <!-- Tap-to-flip how to play -->
+        <div class="how-flip" id="how-flip-wavelength" onclick="event.stopPropagation(); this.classList.toggle('flipped')">
+          <div class="how-face front">
+            <div class="how-flip-label">HOW TO PLAY?</div>
+            <div class="how-flip-hint">↩ tap to flip</div>
+          </div>
+          <div class="how-face back">
+            <div class="back-label">How to Play</div>
+            <ul class="how-list">
+              <li><strong>2+ players</strong> — one is the Psychic, everyone else guesses</li>
+              <li>A spectrum appears between two opposites (e.g. TOXIC ↔ NOT TOXIC)</li>
+              <li><strong>Psychic:</strong> spin to see the hidden target, then describe a situation that lands there</li>
+              <li><strong>Guessers:</strong> drag the dial to where you think the scenario falls</li>
+              <li>Use ← → keys to fine-tune; hold PSYCHIC PEEK to glimpse the zone</li>
+              <li>Hit REVEAL — score 4 pts bull's-eye down to 0 miss. Take turns!</li>
+            </ul>
+          </div>
+        </div>
+
+        <a class="play-btn" href="game.html" onclick="event.stopPropagation()">&#9654; &nbsp;PLAY NOW</a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

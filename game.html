@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wavelength — cecilia.sanjaya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #000;
+      color: #e8e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 40px;
+      overflow-x: hidden;
+    }
+
+    /* Scanlines */
+    .scanlines {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 200;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+    }
+
+    /* Nav */
+    nav {
+      width: 100%; max-width: 680px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; margin-bottom: 24px;
+      border-bottom: 1px solid rgba(0,255,136,0.1);
+    }
+    .back-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: #00ff88; }
+    .nav-label {
+      font-size: 11px; color: rgba(0,255,136,0.3);
+      letter-spacing: 0.15em;
+    }
+
+    /* Title */
+    .title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(26px, 7vw, 52px);
+      font-weight: 900; color: #00ff88;
+      letter-spacing: 0.1em; text-align: center;
+      text-shadow: 0 0 30px rgba(0,255,136,0.5), 0 0 80px rgba(0,255,136,0.2);
+      margin-bottom: 6px;
+    }
+    .sub {
+      font-size: 11px; color: rgba(0,255,136,0.35);
+      letter-spacing: 0.18em; text-align: center;
+      margin-bottom: 22px;
+    }
+
+    /* Spectrum card */
+    .spec-card {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(0,255,136,0.03);
+      border: 1px solid rgba(0,255,136,0.18);
+      border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 14px;
+      width: 100%; max-width: 680px;
+    }
+    .spec-input {
+      background: transparent; border: none; outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px; font-weight: 700; color: #00ff88;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      flex: 1; min-width: 0;
+      text-shadow: 0 0 10px rgba(0,255,136,0.4);
+    }
+    .spec-input.r { text-align: right; }
+    .spec-line { font-size: 10px; color: rgba(0,255,136,0.2); white-space: nowrap; flex-shrink: 0; }
+
+    /* Dial */
+    .dial-wrap {
+      position: relative;
+      width: 100%; max-width: 680px;
+      margin-bottom: 14px;
+      user-select: none;
+    }
+    .dial { width: 100%; display: block; filter: drop-shadow(0 0 16px rgba(0,255,136,0.07)); }
+    .pointer-overlay {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    /* Cover panels */
+    .cover-panel {
+      position: absolute; top: 0;
+      width: 50%; height: 100%;
+      background: #050a05;
+      border: 1px solid rgba(0,255,136,0.12);
+      overflow: hidden;
+      transition: transform 0.55s cubic-bezier(0.22,0.61,0.36,1), opacity 0.2s;
+    }
+    .cover-panel.left  { left: 0;  border-right: none; }
+    .cover-panel.right { right: 0; border-left: none; }
+    .cover-panel.left.open  { transform: translateX(-100%); }
+    .cover-panel.right.open { transform: translateX(100%); }
+    .cover-lines {
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(0,255,136,0.04) 18px, rgba(0,255,136,0.04) 19px);
+    }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.12em; padding: 10px 24px;
+      border-radius: 6px; border: 1px solid rgba(0,255,136,0.28);
+      background: rgba(0,255,136,0.05); color: rgba(0,255,136,0.65);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover:not(:disabled) {
+      background: rgba(0,255,136,0.12);
+      border-color: rgba(0,255,136,0.55);
+      color: #00ff88;
+      text-shadow: 0 0 8px rgba(0,255,136,0.45);
+    }
+    .btn:disabled { opacity: 0.35; cursor: default; }
+    .btn.primary {
+      background: #00ff88; color: #050a05;
+      border-color: #00ff88; font-weight: 700;
+      box-shadow: 0 0 18px rgba(0,255,136,0.28);
+    }
+    .btn.primary:hover { background: #44ffaa; box-shadow: 0 0 28px rgba(0,255,136,0.45); }
+    .btn.accent { border-color: rgba(0,255,136,0.5); color: #00ff88; }
+
+    /* Score */
+    .score-box {
+      text-align: center; padding: 18px 48px;
+      border: 2px solid; border-radius: 10px;
+      background: rgba(0,0,0,0.85);
+      margin-bottom: 16px;
+    }
+    .score-lbl { font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.25); margin-bottom: 6px; }
+    .score-num { font-family: 'Orbitron', monospace; font-size: 60px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+    .score-pts { font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.25); margin-bottom: 6px; }
+    .score-msg { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; }
+
+    .hint { font-size: 10px; color: rgba(255,255,255,0.12); letter-spacing: 0.07em; text-align: center; }
+
+    @media (max-width: 480px) {
+      .spec-line { display: none; }
+      .hint { font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <nav>
+    <a class="back-btn" href="games.html">← back to games</a>
+    <span class="nav-label">// MINI GAME</span>
+  </nav>
+
+  <h1 class="title">WAVELENGTH</h1>
+  <p class="sub">[ DESCRIBE A SITUATION · GUESS WHERE IT LANDS ]</p>
+
+  <div class="spec-card">
+    <input class="spec-input" id="spec-left" value="HOT" readonly>
+    <span class="spec-line">◄──────────────────────────────►</span>
+    <input class="spec-input r" id="spec-right" value="COLD" readonly>
+  </div>
+
+  <div class="dial-wrap" id="dial-wrap">
+    <svg id="dial-svg" class="dial" viewBox="0 0 600 308" style="touch-action:none; cursor:pointer;">
+      <g id="bg-segs"></g>
+      <g id="zone-segs"></g>
+      <path id="dial-outline" fill="none" stroke="#1a4a1a" stroke-width="1.5"></path>
+      <g id="ticks"></g>
+      <circle cx="300" cy="300" r="65" fill="#050a05" stroke="#1a4a1a" stroke-width="1.5"/>
+    </svg>
+
+    <div class="cover-panel left"  id="cover-left"><div class="cover-lines"></div></div>
+    <div class="cover-panel right" id="cover-right"><div class="cover-lines"></div></div>
+
+    <svg class="pointer-overlay" viewBox="0 0 600 308">
+      <path id="ptr-outline" fill="none" stroke="#1a4a1a" stroke-width="1.5"></path>
+      <line id="ptr-line"    stroke="#00ff41" stroke-width="2.5" style="filter:drop-shadow(0 0 5px #00ff41)"></line>
+      <polygon id="ptr-tri" fill="#00ff41" style="filter:drop-shadow(0 0 9px #00ff41)"></polygon>
+      <circle cx="300" cy="300" r="12" fill="#00ff41" style="filter:drop-shadow(0 0 14px #00ff41)"></circle>
+    </svg>
+  </div>
+
+  <div class="btn-row" id="btn-row"></div>
+  <div class="score-box" id="score-box" style="display:none"></div>
+  <p class="hint">PSYCHIC: SPIN → DESCRIBE A SITUATION → GUESSERS DRAG THE DIAL · ← → TO FINE-TUNE · HOLD PSYCHIC PEEK TO PEEK</p>
+
+  <script>
+    const CX = 300, CY = 300, R_OUT = 255, R_IN = 65, SVG_W = 600, SVG_H = 308
+
+    const ZONES = [
+      { hw: 7.5,  color: '#00ff88', pts: 4 },
+      { hw: 15,   color: '#00cc55', pts: 3 },
+      { hw: 22.5, color: '#008833', pts: 2 },
+      { hw: 30,   color: '#004422', pts: 1 },
+    ]
+    const SPECTRUMS = [
+      ['TOXIC','NOT TOXIC'],
+      ['INCONSIDERATE','CONSIDERATE'],
+      ['RED FLAG','GREEN FLAG'],
+      ['OVERRATED','UNDERRATED'],
+      ['CRINGE','ICONIC'],
+      ['IMMATURE','MATURE'],
+      ['FAKE','AUTHENTIC'],
+      ['SELFISH','SELFLESS'],
+      ['CHAOTIC','ORGANIZED'],
+      ['DELUSIONAL','SELF-AWARE'],
+      ['MANIPULATIVE','HONEST'],
+      ['NEEDY','SECURE'],
+      ['PASSIVE AGGRESSIVE','DIRECT'],
+      ['DRAMATIC','CHILL'],
+      ['RECKLESS','RESPONSIBLE'],
+      ['CLOSE-MINDED','OPEN-MINDED'],
+      ['DESTRUCTIVE','CONSTRUCTIVE'],
+      ['SUPERFICIAL','DEEP'],
+      ['COWARDLY','COURAGEOUS'],
+      ['BORING','INTERESTING'],
+      ['EMBARRASSING','IMPRESSIVE'],
+      ['UNSTABLE','STABLE'],
+      ['PETTY','THE BIGGER PERSON'],
+      ['ANTISOCIAL','SOCIAL'],
+      ['SUS','TRUSTWORTHY'],
+    ]
+    const SCORE_COLORS = ['#330000','#004422','#008833','#00cc55','#00ff88']
+    const SCORE_MSGS   = ['NO SIGNAL','INTERFERENCE','WEAK SIGNAL','STRONG SIGNAL','PERFECT SYNC']
+
+    function xy(a, r) {
+      const rad = (90 - a) * Math.PI / 180
+      return [CX + r * Math.cos(rad), CY - r * Math.sin(rad)]
+    }
+    function arc(r1, r2, a1, a2) {
+      const [x1,y1]=xy(a1,r1),[x2,y2]=xy(a1,r2),[x3,y3]=xy(a2,r2),[x4,y4]=xy(a2,r1)
+      const la = (a2-a1)>=180?1:0
+      return `M${x1},${y1} L${x2},${y2} A${r2},${r2},0,${la},1,${x3},${y3} L${x4},${y4} A${r1},${r1},0,${la},0,${x1},${y1}Z`
+    }
+    function getScore(pointer, target) {
+      const d = Math.abs(pointer - target)
+      for (const z of ZONES) if (d <= z.hw) return z.pts
+      return 0
+    }
+
+    // State
+    let phase = 'idle', targetAngle = 0, pointerAngle = 0, score = null, peek = false, spinTimer = null
+
+    // Build static bg segments
+    const bgSegs = document.getElementById('bg-segs')
+    for (let i = 0; i < 36; i++) {
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path')
+      p.setAttribute('d', arc(R_IN, R_OUT, -90+i*5, -90+i*5+5))
+      p.setAttribute('fill', i%2===0 ? '#060d06' : '#0a150a')
+      p.setAttribute('stroke','#0f240f'); p.setAttribute('stroke-width','0.5')
+      bgSegs.appendChild(p)
+    }
+
+    // Build ticks
+    const ticksG = document.getElementById('ticks')
+    for (let i = 0; i < 37; i++) {
+      const a = -90+i*5, big = i%6===0
+      const [ox,oy]=xy(a, R_OUT+1), [ix,iy]=xy(a, R_OUT-(big?18:7))
+      const ln = document.createElementNS('http://www.w3.org/2000/svg','line')
+      ln.setAttribute('x1',ix); ln.setAttribute('y1',iy); ln.setAttribute('x2',ox); ln.setAttribute('y2',oy)
+      ln.setAttribute('stroke', big?'#2a6a2a':'#162616'); ln.setAttribute('stroke-width', big?'1.5':'0.75')
+      ticksG.appendChild(ln)
+    }
+
+    const outlineD = arc(R_IN, R_OUT, -90, 90)
+    document.getElementById('dial-outline').setAttribute('d', outlineD)
+    document.getElementById('ptr-outline').setAttribute('d', outlineD)
+
+    function renderPointer() {
+      const [ptx,pty] = xy(pointerAngle, R_OUT-8)
+      const [pb1x,pb1y] = xy(pointerAngle-2.5, R_IN+18)
+      const [pb2x,pb2y] = xy(pointerAngle+2.5, R_IN+18)
+      const ln = document.getElementById('ptr-line')
+      ln.setAttribute('x1',CX); ln.setAttribute('y1',CY); ln.setAttribute('x2',ptx); ln.setAttribute('y2',pty)
+      document.getElementById('ptr-tri').setAttribute('points',`${ptx},${pty} ${pb1x},${pb1y} ${pb2x},${pb2y}`)
+    }
+
+    function renderZones() {
+      const g = document.getElementById('zone-segs')
+      g.innerHTML = ''
+      if (phase !== 'revealed' && !peek) return
+      ;[...ZONES].reverse().forEach(z => {
+        const a1 = Math.max(targetAngle-z.hw,-90), a2 = Math.min(targetAngle+z.hw,90)
+        if (a2 <= a1) return
+        const p = document.createElementNS('http://www.w3.org/2000/svg','path')
+        p.setAttribute('d', arc(R_IN, R_OUT, a1, a2))
+        p.setAttribute('fill', z.color); p.setAttribute('opacity','0.88')
+        g.appendChild(p)
+      })
+    }
+
+    function renderCovers() {
+      const open = phase === 'revealed'
+      const cl = document.getElementById('cover-left'), cr = document.getElementById('cover-right')
+      cl.className = `cover-panel left${open?' open':''}`
+      cr.className = `cover-panel right${open?' open':''}`
+      cl.style.opacity = peek ? '0' : '1'
+      cr.style.opacity = peek ? '0' : '1'
+    }
+
+    function renderButtons() {
+      const row = document.getElementById('btn-row')
+      row.innerHTML = ''
+      if (phase === 'idle' || phase === 'revealed') {
+        const b = document.createElement('button')
+        b.className = 'btn primary'
+        b.textContent = phase === 'revealed' ? 'NEXT ROUND' : 'SPIN'
+        b.onclick = spin; row.appendChild(b)
+      } else if (phase === 'spinning') {
+        const b = document.createElement('button')
+        b.className = 'btn'; b.disabled = true; b.textContent = 'TRANSMITTING...'
+        row.appendChild(b)
+      } else if (phase === 'clue') {
+        const pb = document.createElement('button')
+        pb.className = 'btn secondary'; pb.textContent = 'PSYCHIC PEEK'
+        const peekOn  = () => { peek = true;  renderZones(); renderCovers() }
+        const peekOff = () => { peek = false; renderZones(); renderCovers() }
+        pb.onmousedown = peekOn; pb.onmouseup = peekOff; pb.onmouseleave = peekOff
+        pb.ontouchstart = e => { e.preventDefault(); peekOn() }
+        pb.ontouchend = peekOff
+        row.appendChild(pb)
+        const rb = document.createElement('button')
+        rb.className = 'btn accent'; rb.textContent = 'REVEAL'; rb.onclick = reveal
+        row.appendChild(rb)
+      }
+    }
+
+    function renderScore() {
+      const box = document.getElementById('score-box')
+      if (score === null) { box.style.display = 'none'; return }
+      box.style.display = 'block'; box.style.borderColor = SCORE_COLORS[score]
+      box.innerHTML = `<div class="score-lbl">SIGNAL LOCK</div>
+        <div class="score-num" style="color:${SCORE_COLORS[score]};text-shadow:0 0 30px ${SCORE_COLORS[score]},0 0 60px ${SCORE_COLORS[score]}66">${score}</div>
+        <div class="score-pts">POINTS</div>
+        <div class="score-msg" style="color:${SCORE_COLORS[score]}">${SCORE_MSGS[score]}</div>`
+    }
+
+    function spin() {
+      if (phase === 'spinning') return
+      peek = false; score = null; pointerAngle = 0; phase = 'spinning'
+      const s = SPECTRUMS[Math.floor(Math.random() * SPECTRUMS.length)]
+      document.getElementById('spec-left').value = s[0]
+      document.getElementById('spec-right').value = s[1]
+      const final = Math.random() * 110 - 55
+      let t = 0, total = 22 + Math.floor(Math.random() * 18)
+      if (spinTimer) clearInterval(spinTimer)
+      spinTimer = setInterval(() => {
+        targetAngle = Math.random() * 110 - 55; t++
+        if (t >= total) { clearInterval(spinTimer); targetAngle = final; phase = 'clue'; renderButtons(); renderZones() }
+        renderPointer()
+      }, 55)
+      renderButtons(); renderScore(); renderZones(); renderCovers(); renderPointer()
+    }
+
+    function reveal() {
+      if (phase !== 'clue') return
+      peek = false; phase = 'revealed'
+      score = getScore(pointerAngle, targetAngle)
+      renderZones(); renderCovers(); renderButtons(); renderScore()
+    }
+
+    function angleFromClient(clientX, clientY) {
+      const svg = document.getElementById('dial-svg')
+      const rect = svg.getBoundingClientRect()
+      const sx = ((clientX - rect.left) / rect.width) * SVG_W
+      const sy = ((clientY - rect.top) / rect.height) * SVG_H
+      return Math.max(-82, Math.min(82, Math.atan2(sx-CX, CY-sy) * 180 / Math.PI))
+    }
+
+    const dw = document.getElementById('dial-wrap')
+    dw.addEventListener('mousedown', e => {
+      if (phase === 'revealed' || phase === 'spinning') return
+      pointerAngle = angleFromClient(e.clientX, e.clientY); renderPointer()
+    })
+    dw.addEventListener('mousemove', e => {
+      if (!(e.buttons & 1) || phase === 'revealed' || phase === 'spinning') return
+      pointerAngle = angleFromClient(e.clientX, e.clientY); renderPointer()
+    })
+    dw.addEventListener('touchstart', e => {
+      e.preventDefault()
+      if (phase === 'revealed' || phase === 'spinning') return
+      pointerAngle = angleFromClient(e.touches[0].clientX, e.touches[0].clientY); renderPointer()
+    }, { passive: false })
+    dw.addEventListener('touchmove', e => {
+      e.preventDefault()
+      if (phase === 'revealed' || phase === 'spinning') return
+      pointerAngle = angleFromClient(e.touches[0].clientX, e.touches[0].clientY); renderPointer()
+    }, { passive: false })
+
+    window.addEventListener('keydown', e => {
+      if (phase === 'revealed' || phase === 'spinning') return
+      if (e.key === 'ArrowLeft')  { pointerAngle = Math.max(-82, pointerAngle-1); renderPointer() }
+      if (e.key === 'ArrowRight') { pointerAngle = Math.min( 82, pointerAngle+1); renderPointer() }
+    })
+
+    // Init
+    renderPointer(); renderButtons(); renderZones(); renderCovers()
+  </script>
+</body>
+</html>
