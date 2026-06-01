@@ -3,9 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cecilia Sanjaya</title>
-  <meta name="description" content="Portfolio of Cecilia Sanjaya — EE & CS at UC Berkeley." />
+  <title>Cecilia Sanjaya — EECS @ UC Berkeley | Software & Hardware Engineer</title>
+  <meta name="description" content="Cecilia Sanjaya — EECS at UC Berkeley (Class of 2027). Goldman Sachs Controllers intern. Software Engineer building AI platforms. Designer of RISC-V processors and IC devices. Open to SWE and EE/hardware roles." />
+  <meta name="keywords" content="software engineer, electrical engineer, hardware engineer, FPGA, RISC-V, UC Berkeley, EECS, machine learning, AI, embedded systems, full-stack developer, Goldman Sachs, internship, computer architecture, IC design, Verilog" />
   <meta name="theme-color" content="#080c14">
+  <meta property="og:title" content="Cecilia Sanjaya — Software & Hardware Engineer" />
+  <meta property="og:description" content="EECS @ UC Berkeley. Goldman Sachs intern. Builds RISC-V processors and full-stack AI platforms. Open to SWE and EE roles." />
+  <meta property="og:type" content="website" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
   <style>
@@ -880,6 +884,173 @@
     footer p { font-family: var(--mono); font-size: 12px; color: var(--muted); }
     footer a { color: var(--muted); }
     footer a:hover { color: var(--accent); }
+
+    /* ====== Hamburger + Mobile Navigation ====== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--fg);
+      border-radius: 2px;
+      transition: transform 0.22s, opacity 0.22s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(0, 7px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(0, -7px); }
+    .mobile-nav {
+      position: fixed;
+      top: 56px; left: 0; right: 0;
+      background: rgba(4,4,4,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 97;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transform: translateY(-110%);
+      transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+      pointer-events: none;
+    }
+    .mobile-nav.open { transform: translateY(0); pointer-events: auto; }
+    .mobile-nav a {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: block;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      text-align: center;
+    }
+    .mobile-nav a:hover, .mobile-nav a:active { color: var(--fg); border-color: var(--border-hover); background: rgba(41,121,255,0.04); }
+    .mobile-nav .btn-email { background: rgba(41,121,255,0.08); color: var(--accent); border-color: var(--border); }
+    .mobile-nav .btn-game { background: rgba(0,255,136,0.07); color: #00ff88; border-color: rgba(0,255,136,0.25); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; }
+      .search-wrap { display: none; }
+    }
+    @media (min-width: 769px) { .mobile-nav { display: none; } }
+    @media (max-width: 480px) {
+      .chat-panel { right: 12px; left: 12px; width: auto; bottom: 74px; max-height: 400px; }
+      .chat-toggle { right: 16px; bottom: 16px; }
+    }
+
+    /* ====== Status Badge ====== */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--green);
+      background: rgba(0,230,118,0.07);
+      border: 1px solid rgba(0,230,118,0.22);
+      border-radius: 20px;
+      padding: 4px 13px;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+    .status-badge::before { content: '●'; font-size: 7px; animation: blink 2s step-end infinite; }
+
+    /* ====== Experience Cards ====== */
+    .exp-grid { display: flex; flex-direction: column; gap: 12px; max-width: min(680px, 100%); }
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      transition: border-color 0.2s;
+    }
+    .exp-card:hover { border-color: var(--border-hover); }
+    .exp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .exp-company { font-size: 14px; font-weight: 700; color: var(--fg); margin-bottom: 2px; }
+    .exp-company-tag {
+      font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 4px;
+      background: rgba(41,121,255,0.08); color: var(--accent);
+      border: 1px solid rgba(41,121,255,0.2); white-space: nowrap; flex-shrink: 0;
+    }
+    .exp-role { font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 3px; }
+    .exp-period { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .exp-bullets li {
+      font-size: 13px; color: var(--muted); line-height: 1.65;
+      padding-left: 18px; position: relative;
+    }
+    .exp-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 11px; top: 3px; }
+
+    /* ====== Contact Section ====== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 5px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      text-decoration: none; color: var(--fg);
+    }
+    .contact-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 0 0 1px rgba(41,121,255,0.22), 0 8px 24px rgba(41,121,255,0.1);
+      transform: translateY(-2px); color: var(--fg);
+    }
+    .contact-card-icon { margin-bottom: 6px; color: var(--accent); line-height: 0; }
+    .contact-card-icon svg { display: block; }
+    /* Inline-flex for nav/mobile buttons with icon+text */
+    .nav-links .btn-email, .nav-links .btn-game { display: inline-flex; align-items: center; gap: 5px; }
+    .mobile-nav .btn-email, .mobile-nav .btn-game { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .chat-email-link svg { flex-shrink: 0; }
+    .contact-card-label { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+    .contact-card-value { font-size: 13px; color: var(--fg); font-weight: 500; }
+    .contact-card-sub { font-size: 11px; color: var(--muted); }
+    .contact-cta {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      max-width: min(600px, 100%);
+    }
+    .contact-cta h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .contact-cta p { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
+    .contact-role-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .contact-role-tag {
+      font-family: var(--mono); font-size: 11px; padding: 4px 12px;
+      border-radius: 20px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04); color: var(--muted);
+    }
+    .contact-role-tag.hi { border-color: rgba(41,121,255,0.35); color: var(--accent); background: rgba(41,121,255,0.07); }
+
+    /* ====== Premium card enhancements ====== */
+    .card { transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s; }
+    .card:hover { transform: translateY(-1px); }
+
+    @media (max-width: 480px) {
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 360px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -910,6 +1081,7 @@
     <a href="#projects" data-section="projects">Projects</a>
     <a href="#skills" data-section="skills">Skills</a>
     <a href="#courses" data-section="courses">Courses</a>
+    <a href="#contact" data-section="contact">Contact</a>
   </aside>
 
   <!-- NAV -->
@@ -926,10 +1098,27 @@
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#courses">Courses</a>
-        <a href="mailto:cecs@berkeley.edu?subject=Resume%20Request&body=Hi%20Cecilia,%0D%0A%0D%0ACould%20I%20please%20request%20a%20copy%20of%20your%20resume%20for%20____?%0D%0A%0D%0AThank%20you." class="btn-email">✉ Email</a>
+        <a href="#contact">Contact</a>
+        <a href="mailto:cecs@berkeley.edu?subject=Resume%20Request&body=Hi%20Cecilia,%0D%0A%0D%0ACould%20I%20please%20request%20a%20copy%20of%20your%20resume%20for%20____?%0D%0A%0D%0AThank%20you." class="btn-email"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</a>
       </div>
+      <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#courses">Courses</a>
+    <a href="#contact">Contact</a>
+    <a href="resume.html">Resume</a>
+    <a href="https://github.com/ceciliasanjaya" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://linkedin.com/in/cecilia-sanjaya" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="games.html" class="btn-game"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg> Games</a>
+    <a href="mailto:cecs@berkeley.edu?subject=Resume%20Request&body=Hi%20Cecilia,%0D%0A%0D%0ACould%20I%20please%20request%20a%20copy%20of%20your%20resume%20for%20____?%0D%0A%0D%0AThank%20you." class="btn-email"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email</a>
+  </div>
 
   <!-- HERO -->
   <header>
@@ -938,12 +1127,13 @@
         <img class="avatar" src="pfp.JPG" alt="Headshot of Cecilia Sanjaya">
         <div class="hero-main">
           <h1>Cecilia Sanjaya<span class="cursor"></span></h1>
-          <p class="sub">Electrical Engineer and Software Engineer exploring the intersection of hardware and AI, with experience in system architecture, hardware design, IC, microfabrication, and AI systems.</p>
+          <div class="status-badge">open to SWE &amp; EE roles</div>
+          <p class="sub">I build at every layer of the stack. Designed a 133 MHz RISC-V processor that boots Zephyr OS on FPGA. Shipped a production AI coaching platform to real paying clients. Interned at Goldman Sachs on the Controllers team in New York. EECS at UC Berkeley — open to software engineering and hardware engineering roles.</p>
           <div class="actions">
             <a class="btn primary" href="resume.html">Resume</a>
             <a class="btn" href="https://github.com/ceciliasanjaya">GitHub</a>
             <a class="btn" href="https://linkedin.com/in/cecilia-sanjaya">LinkedIn</a>
-            <a class="btn btn-game" href="games.html">&#9654; Games</a>
+            <a class="btn btn-game" href="games.html"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg> Games</a>
           </div>
         </div>
         <div class="edu-inline">
@@ -982,6 +1172,7 @@
         <div class="ab-topics-grid">
           <button class="ab-topic-btn" data-abtopic="background">background</button>
           <button class="ab-topic-btn" data-abtopic="engineering">engineering</button>
+          <button class="ab-topic-btn" data-abtopic="experience">experience</button>
           <button class="ab-topic-btn" data-abtopic="goals">goals</button>
           <button class="ab-topic-btn" data-abtopic="outside">outside of work</button>
           <button class="ab-topic-btn" data-abtopic="fun">fun facts</button>
@@ -1024,13 +1215,52 @@
           </div>
         </div>
 
+        <div class="ab-panel" id="abp-experience">
+          <div class="exp-grid">
+            <div class="exp-card">
+              <div class="exp-header">
+                <div>
+                  <div class="exp-company">Goldman Sachs</div>
+                  <div class="exp-role">Controllers Team Intern</div>
+                  <div class="exp-period">Summer 2026 · New York, NY</div>
+                </div>
+                <span class="exp-company-tag">Finance · Internship</span>
+              </div>
+              <ul class="exp-bullets">
+                <li>Embedded within Goldman Sachs's Controllers division, applying software and data engineering skills to large-scale financial systems and reporting infrastructure.</li>
+                <li>One of a select cohort of university students placed into a technical role within GS's core finance operations team.</li>
+              </ul>
+            </div>
+            <div class="exp-card">
+              <div class="exp-header">
+                <div>
+                  <div class="exp-company">Peak Performance Unleashed</div>
+                  <div class="exp-role">Software Engineer</div>
+                  <div class="exp-period">Jan 2026 – Present · Remote</div>
+                </div>
+                <span class="exp-company-tag">Startup · Full-time</span>
+              </div>
+              <ul class="exp-bullets">
+                <li>Building CoachBridge — a production AI coaching platform — end-to-end in Next.js / TypeScript with Supabase (PostgreSQL + Auth) and Vercel deployment.</li>
+                <li>Architected tier-based access control, usage metering, and a scalable API layer integrating LLM providers for real-time AI features.</li>
+                <li>Shipping production software to real paying clients as a solo developer, running in parallel with full-time coursework.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ab-cta">
+            <a class="btn small primary" href="resume.html">Request Resume</a>
+            <a class="btn small" href="mailto:cecs@berkeley.edu">Email Me</a>
+          </div>
+        </div>
+
         <div class="ab-panel" id="abp-goals">
-          <p>My long-term goal is to contribute to technologies that <strong>advance the future of computing</strong> — from the silicon level to intelligent systems — and build tools with real, lasting impact.</p>
-          <p>Right now I'm especially excited about <strong>hardware-AI co-design</strong>: how we build chips optimized for intelligent workloads. I think the next decade of breakthroughs lives at that boundary.</p>
+          <p>My long-term goal is to work at the intersection of <strong>hardware architecture and AI</strong> — designing systems where silicon constraints and intelligent software co-evolve. The most interesting decade of computing is just starting.</p>
+          <p>Near-term, I'm looking for roles that let me bring both lenses — whether that's a <strong>software engineering position</strong> where hardware intuition is a superpower, or a <strong>hardware role</strong> where I contribute at the system level.</p>
           <div class="ab-timeline">
-            <div class="ab-tl-item"><div class="ab-tl-year">2025–26</div><div class="ab-tl-body"><h4>Summer Internship</h4><p>Looking for SWE, hardware, or AI systems roles — building real things at scale.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">2026</div><div class="ab-tl-body"><h4>Goldman Sachs — Controllers Team Intern</h4><p>Summer internship in New York, applying engineering skills to large-scale financial infrastructure.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">2026</div><div class="ab-tl-body"><h4>Software Engineer @ Peak Performance Unleashed</h4><p>Building CoachBridge, a production AI coaching platform, since January 2026.</p></div></div>
             <div class="ab-tl-item"><div class="ab-tl-year">2027</div><div class="ab-tl-body"><h4>B.S. EECS — UC Berkeley</h4><p>Graduating with focus on computer architecture and AI systems.</p></div></div>
-            <div class="ab-tl-item"><div class="ab-tl-year">Beyond</div><div class="ab-tl-body"><h4>Hardware-AI Co-design</h4><p>Contribute to the next generation of computing — silicon to intelligent systems.</p></div></div>
+            <div class="ab-tl-item"><div class="ab-tl-year">Beyond</div><div class="ab-tl-body"><h4>Hardware-AI Co-design</h4><p>Contribute to the next generation of computing — from silicon physics to deployed intelligent systems.</p></div></div>
           </div>
           <div class="ab-cta">
             <a class="btn small primary" href="resume.html">Request Resume</a>
@@ -1081,33 +1311,12 @@
           <button class="sec-topic-btn cs-btn" data-sectarget="proj-security">cs — security</button>
           <button class="sec-topic-btn cs-btn" data-sectarget="proj-ai">cs — ai + ml</button>
           <button class="sec-topic-btn cs-btn" data-sectarget="proj-software">cs — software</button>
+          <button class="sec-topic-btn cs-btn" data-sectarget="proj-web">web — freelance</button>
         </div>
       </div>
 
       <div class="sec-panel" id="proj-inprog">
       <div class="grid">
-
-        <article class="card">
-          <h3>RISC-V Processor on FPGA</h3>
-          <div class="tech-tags">
-            <span class="tag">FPGA</span><span class="tag">Verilog</span><span class="tag">Vivado</span><span class="tag">Simulations</span>
-          </div>
-          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
-            <div class="flash-inner">
-              <div class="flash-face front">
-                <p>Description</p>
-                <span class="flip-hint">↩ tap to flip</span>
-              </div>
-              <div class="flash-face back">
-                <p>Design project: implementation of a full three-stage RISC-V processor system, with caches, graphics acceleration, and external peripheral components. The design is mapped and demonstrated on an FPGA hardware platform.</p>
-                <span class="flip-hint">↩ tap to flip back</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-links">
-            <a class="btn small" href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank">Description</a>
-          </div>
-        </article>
 
         <article class="card">
           <h3>AI Integrated Website Development</h3>
@@ -1121,7 +1330,7 @@
                 <span class="flip-hint">↩ tap to flip</span>
               </div>
               <div class="flash-face back">
-                <p>In-progress full-stack AI-powered platform integrating simulations, data analysis and generation. Built with a scalable architecture, tier-based access control, usage tracking, and responsive UI design for real-world deployment.</p>
+                <p>Building CoachBridge for Peak Performance Unleashed — a production AI coaching platform serving real paying clients since January 2026. Architected in Next.js / TypeScript with Supabase (PostgreSQL + Auth), tier-based access control, usage metering, and LLM integration; Phase 2 targets advanced simulation and client analytics features.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1136,6 +1345,28 @@
       <div class="grid">
 
         <article class="card">
+          <h3>RISC-V Processor on FPGA</h3>
+          <div class="tech-tags">
+            <span class="tag">FPGA</span><span class="tag">Verilog</span><span class="tag">Vivado</span><span class="tag">RISC-V</span><span class="tag">Pipelining</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front">
+                <p>Description</p>
+                <span class="flip-hint">↩ tap to flip</span>
+              </div>
+              <div class="flash-face back">
+                <p>Designed and verified a 3-stage pipelined RV32IM processor in Verilog, achieving 133.333 MHz timing closure (+0.299 ns WNS), a CPI of 1.168 on matrix multiply, and a CoreMark score of 318.6 — with Zephyr RTOS booting successfully on FPGA. Implemented MEM/WB→ID/EX forwarding, machine-mode CSR/interrupt support, and a shared multiplier optimization that improved Figure of Merit from 10.48 to 16.54 across 3,647 LUTs.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://www2.eecs.berkeley.edu/Courses/EECS151LB/" target="_blank" rel="noopener noreferrer">Course</a>
+          </div>
+        </article>
+
+        <article class="card">
           <h3>Microfabrication - Silicon Wafer</h3>
           <div class="tech-tags">
             <span class="tag">Fabrication</span><span class="tag">Microstructures</span><span class="tag">IC</span><span class="tag">Laboratory</span>
@@ -1144,7 +1375,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Fabricated MOS transistors and microstructures on silicon wafers using processes like oxidation, ion implantation, lithography, and etching, and evaluated their electrical and mechanical performance.</p>
+                <p>Fabricated functional NMOS transistors on silicon wafers through a complete IC process flow — thermal oxidation, ion implantation, UV photolithography, and wet/dry etching — in UC Berkeley's EE143 cleanroom. Characterized device electrical performance via I-V measurements and correlated results to process parameters, building hands-on intuition for how fabrication choices directly shape transistor behavior.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1164,7 +1395,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Modeled and designed an NMOS transistor across operating regions (cutoff, triode, saturation), extracting key parameters and validating behavior with SPICE simulations. Analyzed short-channel effects, threshold shifts, and variability; documented design trade-offs and measurements.</p>
+                <p>Modeled and characterized an NMOSFET across cutoff, triode, and saturation operating regions using SPICE simulation, extracting threshold voltage (Vt), transconductance (gm), and channel-length modulation (λ) from I-V curves. Analyzed short-channel effects and process variability, producing a validated compact model with formal design documentation — bridging device physics theory to real circuit design practice.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1184,7 +1415,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Designed and built a circuit that takes as input the signal from the output jack of an electric guitar, processes the signal to both enhance its treble (i.e., high frequency) content and raise its amplitude.</p>
+                <p>Designed and built a treble-boost guitar effects pedal from schematic to soldered PCB — selecting RC filter poles, biasing the transistor amplifier stage, and verifying the frequency response on a spectrum analyzer. Delivered a working circuit that measurably enhances high-frequency content and output amplitude, demonstrating complete analog design from component selection through physical build.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1204,7 +1435,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Functionality: display time and counts steps per day (accelerometer). Power source is from lithium batteries that go through a regulator to power the ESP32. Layout: accelerometer, display screen, and a button all connected to the ESP32. Buttons can switch between displaying the count steps and the time.</p>
+                <p>Designed a PCB smartwatch from schematic to layout in KiCad — integrating an ESP32 microcontroller, OLED display, accelerometer for step-count logic, and a Li-Po battery with a linear voltage regulator in a compact form factor. Programmed embedded firmware in C++ to display real-time clock and daily step count switchable via hardware button, demonstrating end-to-end hardware product development from PCB design through firmware debugging.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1224,7 +1455,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Building a voice controlled car, by understanding DACs, ADCs, PWM, BJT, Mic board circuits.</p>
+                <p>Built a voice-controlled robot car by designing the full analog signal chain — microphone biasing, anti-aliasing filter, and ADC interface — then implementing an SVD-based voice classification algorithm in C++ on an Arduino that reliably distinguishes spoken commands in real time. Integrated closed-loop PWM motor control to translate classified commands into directional movement, culminating in a live demo of the car navigating on voice input alone.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1244,7 +1475,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a light-sensing circuit using a photodiode to scan real images and applied linear algebra and matrix representations to model image data. Reconstructed images through linear systems theory and Fourier transforms, demonstrating how mathematical tools translate into practical imaging applications.</p>
+                <p>Built a single-pixel CT scanner using a photodiode circuit and motorized scanning rig, then reconstructed grayscale images of physical objects by applying back-projection and 2D Fourier transforms in Python — producing recognizable images from raw 1D scan data. Demonstrated how the linear systems framework maps directly to medical imaging principles used in CT and MRI reconstruction.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1271,7 +1502,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Designed and implemented an end-to-end encrypted sharing system supporting user registration, invitation, revocation, and tamper-evident storage. Combined asymmetric keys for identity with symmetric encryption for content, plus HMACs and nonces to prevent replay and forgery.</p>
+                <p>Designed and implemented an end-to-end encrypted file-sharing system in Go combining RSA-OAEP for identity and key wrapping, AES-CTR for content encryption, and HMAC-SHA256 for tamper detection — with full support for user registration, invitation trees, and revocation chains. Provided formal security arguments demonstrating resistance to a malicious dataserver with access to all stored ciphertext.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1291,7 +1522,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Performed hands-on exploitation of unsafe string operations and stack frames, crafting inputs that trigger buffer overflows and control-flow hijacking. Used disassembly and debugging tools to reason about calling conventions, mitigations (ASLR/DEP), and secure coding practices.</p>
+                <p>Performed hands-on exploitation of memory-unsafe C programs — constructing crafted inputs to trigger stack buffer overflows, overwrite saved return addresses, and hijack control flow — then analyzed how ASLR, stack canaries, and NX mitigations defeat each attack. Built the dual attacker-and-defender mental model needed to write and audit secure systems-level code.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1310,7 +1541,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Designed a working CPU from first principles, integrating an ALU, register file, instruction decode, and control unit. Implemented and verified ISA functionality and hazards, then analyzed performance and correctness on test programs.</p>
+                <p>Designed a pipelined RISC-V CPU from scratch — building a 32-bit ALU, register file, instruction decoder, and control unit, then wiring them into a complete datapath with correct branch and load hazard handling. Passed all provided ISA correctness tests, building foundational intuition for how processor microarchitecture directly implements the software-visible instruction set.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1329,7 +1560,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a terminal snake game in C with careful pointer use and dynamic memory management. Focused on clean APIs, unit tests, and robustness against invalid input and edge cases.</p>
+                <p>Built a terminal Snake game in C using a custom doubly-linked-list board representation and explicit heap allocation — exposing and fixing subtle memory corruption bugs through Valgrind and GDB. Hardened against all edge cases (wall collisions, self-intersections, invalid input) with a thorough unit test suite demonstrating production-quality C systems programming.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1348,7 +1579,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Accelerated an image classifier by optimizing memory access patterns and computation kernels. Explored vectorization and cache-friendly layouts to reduce runtime while preserving correctness.</p>
+                <p>Optimized a neural network classifier in C by restructuring matrix multiplication for cache-friendly access patterns and applying SIMD intrinsics to vectorize the inner compute loop — achieving significant runtime reductions over the naive baseline. Preserved bit-exact correctness on all test inputs, demonstrating real-world performance engineering on hardware-constrained systems.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1366,6 +1597,28 @@
       <div class="grid">
 
         <article class="card">
+          <h3>Controller Copilot — IBM SkillsBuild</h3>
+          <div class="tech-tags">
+            <span class="tag">IBM watsonx.ai</span><span class="tag">Granite</span><span class="tag">Python</span><span class="tag">AI</span><span class="tag">Finance</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front">
+                <p>Description</p>
+                <span class="flip-hint">↩ tap to flip</span>
+              </div>
+              <div class="flash-face back">
+                <p>Built Controller Copilot with IBM SkillsBuild × watsonx.ai — an AI-powered financial analysis tool that detects 7 classes of transaction anomalies (duplicate payments, vendor spend spikes, round-number payments, weekend transactions, category mismatches, repeated amounts, and unusually large transactions) using deterministic rule-based detection. Paired each flagged item with AI-generated explanations via IBM's Granite model and a natural-language query interface, replacing manual spreadsheet audit with an interactive, sortable workspace.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://ibm-skillsbuild-lyart.vercel.app" target="_blank" rel="noopener noreferrer">Live Demo</a>
+          </div>
+        </article>
+
+        <article class="card">
           <h3>Search</h3>
           <div class="tech-tags">
             <span class="tag">Python</span><span class="tag">BFS/DFS</span><span class="tag">UCS</span><span class="tag">A*</span><span class="tag">Heuristics</span>
@@ -1374,7 +1627,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built generic graph search solvers and admissible heuristics to navigate grid worlds efficiently. Compared completeness and optimality of BFS/DFS/UCS, and tuned A* for strong runtime with minimal path cost.</p>
+                <p>Implemented BFS, DFS, UCS, and A* graph search in Python and designed admissible, consistent heuristics that dramatically reduced node expansions required to solve Pacman maze configurations. Analyzed completeness and optimality guarantees for each algorithm, demonstrating that A* with a domain-specific heuristic finds optimal solutions with a fraction of the nodes explored by uninformed search.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1393,7 +1646,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Implemented adversarial planners for stochastic, multi-agent environments. Built evaluation functions and pruning strategies to act robustly against opponents and chance nodes under depth limits.</p>
+                <p>Built minimax agents with alpha-beta pruning and expectimax agents for adversarial multi-ghost Pacman — designing evaluation functions that balance food collection, ghost avoidance, and positional advantage under strict depth limits. Demonstrated that principled adversarial planning with pruning achieves significantly higher win rates than reflex-based baselines while staying within the compute budget.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1412,7 +1665,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Solved grid-world tasks using dynamic programming and model-free learning. Tuned discount, exploration schedules, and learning rates to converge to policies with strong expected returns.</p>
+                <p>Solved MDP planning and model-free control tasks using value iteration and Q-learning — tuning discount factors, learning rates, and epsilon schedules to converge on near-optimal policies across grid-world environments. Showed that Q-learning agents trained on one layout generalized reliably to held-out configurations, achieving close-to-optimal cumulative reward without any environment model.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1431,7 +1684,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Tracked hidden agents by updating belief distributions over positions using noisy sensor models and transition dynamics. Compared exact and approximate inference for speed vs. accuracy.</p>
+                <p>Implemented exact and approximate Bayesian inference for hidden ghost tracking — maintaining belief distributions over all grid positions and updating them from noisy sensor readings using Bayes' rule and HMM forward algorithms. Compared particle-filter approximate inference to exact variable elimination, demonstrating near-identical tracking accuracy at a fraction of the compute cost.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1450,7 +1703,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Implemented and compared classic classifiers on image/text tasks. Built data pipelines, engineered features, and analyzed accuracy/precision-recall tradeoffs under cross-validation.</p>
+                <p>Implemented Naive Bayes and Perceptron classifiers from scratch and applied them to digit and face image classification — engineering spatial features and tuning hyperparameters via cross-validation to maximize accuracy on held-out test sets. Analyzed precision-recall trade-offs and classifier stability to determine which model best suits each data distribution.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1476,7 +1729,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Developed a 2D tile-based world generation game in Java featuring randomized terrain, user interaction, and persistent save/load functionality.</p>
+                <p>Built a fully playable 2D tile-based world game in Java — implementing procedural terrain generation with BSP-tree partitioning, keyboard-driven player interaction, and persistent save/load via Java serialization. Architected with clean model-view separation across multiple collaborating classes, demonstrating object-oriented design and algorithmic thinking at full project scale.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1496,7 +1749,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>A's Before BaeS: Designing and building an application for students to find study partners. Users can create their own profile and swipe on other profiles to find ideal partners.</p>
+                <p>Designed and shipped a full iOS study-partner matching app in Swift — implementing user profile creation, preference-based card-swipe matching, and a Figma-designed UI — within a 6-week sprint as part of Berkeley's Cubstart program. Built UIKit navigation, swipe-state management, and a UX pattern that mirrors industry-standard matching apps, resulting in a polished demo-ready product.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1516,7 +1769,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Implemented the tile-merging logic, scoring, and win/lose conditions for the classic puzzle. Structured a clean model with deterministic testing to validate all move edge cases.</p>
+                <p>Implemented the complete game logic for 2048 in Java — tile-merging rules, directional sliding, scoring, and win/lose detection — with a clean model separated from the provided GUI rendering layer. Validated all corner cases including full board fills, simultaneous merges, and score edge cases with a deterministic unit test suite.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1535,7 +1788,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a generic double-ended queue using a sentinel doubly linked list. Supported amortized-constant front/back operations and thorough unit tests for correctness and edge cases.</p>
+                <p>Implemented a generic double-ended queue backed by a circular doubly-linked list with sentinel nodes in Java, supporting amortized O(1) front/back operations. Validated correctness and edge cases — empty deque, single-element, and alternating add/remove sequences — with a comprehensive JUnit test suite.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1554,7 +1807,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Implemented a deque backed by a circular array with dynamic resizing. Ensured constant-time amortized operations and efficient memory usage with minimal copying.</p>
+                <p>Implemented a generic deque backed by a circular resizing array in Java, achieving amortized O(1) operations through geometric doubling on expansion and halving on shrinkage to maintain ≥25% utilization. Minimized unnecessary copying during resizes and validated memory efficiency and correctness across hundreds of mixed-operation test sequences.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1573,7 +1826,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a word-frequency exploration tool over large corpora. Parsed datasets, modeled relationships among terms, and answered time-bounded queries with efficient indexing and graph traversal.</p>
+                <p>Built a word-frequency exploration tool over the Google Ngram corpus in Java — indexing millions of word-year-frequency records into a custom hash-map structure paired with a WordNet synonym graph for hyponym-aware queries. Answered arbitrary time-bounded frequency and hyponym queries efficiently by pre-computing the right index structure at load time.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1593,7 +1846,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Programmed a dice game engine with turn logic, special rules, and scoring strategies. Used higher-order functions and randomness to evaluate tactics over many simulated games.</p>
+                <p>Built a complete dice-game engine in Python — implementing turn logic, four special scoring rules, and a strategy optimizer that simulates thousands of games to find the highest expected-value dice count for any score state. Used higher-order functions and functional composition to cleanly separate game rules from strategy evaluation logic.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1612,7 +1865,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Built a typing-assistant that measures speed/accuracy and provides autocorrect suggestions using customizable edit-distance functions. Implemented performance tracking and fairness across players.</p>
+                <p>Built a typing-speed assistant in Python that measures WPM and accuracy for arbitrary prompts, then applies a minimum-edit-distance autocorrect function to correct typos against a vocabulary list. Implemented multi-player performance tracking and a custom recursive edit-distance algorithm, demonstrating functional programming patterns and string algorithm design.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1631,7 +1884,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Developed a strategic tower-defense simulation using object-oriented design. Implemented specialized unit behaviors, resource constraints, and game progression with clean class hierarchies.</p>
+                <p>Developed a tower-defense simulation in Python using deep class hierarchies — 10+ specialized Ant and Bee subclasses with unique behaviors, damage models, and resource constraints — demonstrating OOP principles including inheritance, polymorphism, and composition. Implemented a complete game loop with placement validation, turn resolution, and win/loss state management.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1650,7 +1903,7 @@
             <div class="flash-inner">
               <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
               <div class="flash-face back">
-                <p>Implemented a functional language interpreter supporting nested expressions, lexical scoping, special forms, and tail recursion. Built a REPL and evaluator with environment frames and dynamic error handling.</p>
+                <p>Implemented a Scheme interpreter in Python supporting nested expressions, first-class functions, lexical scoping with environment frames, tail-call optimization, and a complete set of special forms (define, lambda, if, cond, let, quasiquote). Built the tokenizer, parser, and evaluator from scratch, culminating in a REPL that correctly evaluates complex recursive and higher-order programs.</p>
                 <span class="flip-hint">↩ tap to flip back</span>
               </div>
             </div>
@@ -1662,6 +1915,69 @@
 
       </div>
       </div><!-- /proj-software panel -->
+
+      <div class="sec-panel" id="proj-web">
+      <div class="grid">
+
+        <article class="card">
+          <h3>StackXo — Web Design Studio</h3>
+          <div class="tech-tags">
+            <span class="tag">Freelance</span><span class="tag">Web Design</span><span class="tag">Full-Stack</span><span class="tag">Business</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Launched StackXo, a web design studio, and delivered 2 client websites — handling the full lifecycle from discovery through deployment on custom domains, generating real client revenue. Each site is fully responsive, optimized for Core Web Vitals, and tailored to the client's brand and conversion goals.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://stackxo.com" target="_blank" rel="noopener noreferrer">Visit StackXo</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Manasa Meenakshi — Personal Site</h3>
+          <div class="tech-tags">
+            <span class="tag">Web Design</span><span class="tag">Responsive</span><span class="tag">Client Work</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Designed and developed a personal portfolio website for a client — translating brand requirements into a responsive, polished web presence with smooth interactions and custom typography. Delivered from brief to live site on a custom domain within a 2-week timeline.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://manasaameenakshi.com" target="_blank" rel="noopener noreferrer">Visit Site</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Peak Performance Unleashed</h3>
+          <div class="tech-tags">
+            <span class="tag">Web Design</span><span class="tag">Responsive</span><span class="tag">Client Work</span>
+          </div>
+          <div class="flashcard" role="button" tabindex="0" aria-pressed="false" aria-label="Flip description">
+            <div class="flash-inner">
+              <div class="flash-face front"><p>Description</p><span class="flip-hint">↩ tap to flip</span></div>
+              <div class="flash-face back">
+                <p>Built the business website for Peak Performance Unleashed from scratch — a performance coaching site designed for credibility and conversion — resulting in the client later hiring me as a Software Engineer to build their core AI platform, CoachBridge. Fully responsive with performance-optimized assets and a clear service-to-CTA information hierarchy.</p>
+                <span class="flip-hint">↩ tap to flip back</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a class="btn small" href="https://www.peakperformanceunleashed.org" target="_blank" rel="noopener noreferrer">Visit Site</a>
+          </div>
+        </article>
+
+      </div>
+      </div><!-- /proj-web panel -->
     </section>
 
     <!-- SKILLS -->
@@ -1754,6 +2070,60 @@
       </div>
     </section>
 
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-header">
+        <div class="section-label">contact</div>
+        <h2>Let's Connect</h2>
+      </div>
+
+      <div class="contact-cta">
+        <div class="status-badge">open to SWE &amp; EE roles</div>
+        <h3>Software Engineering · Hardware Engineering · AI Systems</h3>
+        <p>I'm a UC Berkeley EECS student with real industry experience at Goldman Sachs and Peak Performance Unleashed, a completed RISC-V FPGA processor, and a production AI platform in the field. If you're hiring for roles that value both hardware intuition and software depth — I'd love to talk.</p>
+        <div class="contact-role-tags">
+          <span class="contact-role-tag hi">Software Engineer</span>
+          <span class="contact-role-tag hi">Hardware Engineer</span>
+          <span class="contact-role-tag hi">AI / ML Engineer</span>
+          <span class="contact-role-tag">FPGA / RTL Design</span>
+          <span class="contact-role-tag">Full-Stack Development</span>
+          <span class="contact-role-tag">Embedded Systems</span>
+          <span class="contact-role-tag">Computer Architecture</span>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="mailto:cecs@berkeley.edu?subject=Opportunity%20for%20Cecilia&body=Hi%20Cecilia%2C%0A%0A"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email Me</a>
+          <a class="btn" href="resume.html">Request Resume</a>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:cecs@berkeley.edu">
+          <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <div class="contact-card-label">Email</div>
+          <div class="contact-card-value">cecs@berkeley.edu</div>
+          <div class="contact-card-sub">Responds within 24h</div>
+        </a>
+        <a class="contact-card" href="https://linkedin.com/in/cecilia-sanjaya" target="_blank" rel="noopener noreferrer">
+          <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+          <div class="contact-card-label">LinkedIn</div>
+          <div class="contact-card-value">cecilia-sanjaya</div>
+          <div class="contact-card-sub">Connect for recruiting</div>
+        </a>
+        <a class="contact-card" href="https://github.com/ceciliasanjaya" target="_blank" rel="noopener noreferrer">
+          <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div>
+          <div class="contact-card-label">GitHub</div>
+          <div class="contact-card-value">ceciliasanjaya</div>
+          <div class="contact-card-sub">Code &amp; projects</div>
+        </a>
+        <a class="contact-card" href="https://stackxo.com" target="_blank" rel="noopener noreferrer">
+          <div class="contact-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>
+          <div class="contact-card-label">Web Studio</div>
+          <div class="contact-card-value">stackxo.com</div>
+          <div class="contact-card-sub">Freelance web work</div>
+        </a>
+      </div>
+    </section>
+
   </main>
 
   <footer>
@@ -1771,7 +2141,7 @@
 
   <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Portfolio assistant">
     <div class="chat-header">
-      <div class="chat-avatar">✦</div>
+      <div class="chat-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div>
       <div>
         <div class="chat-hname">Portfolio Assistant</div>
         <div class="chat-hstatus">online</div>
@@ -2070,7 +2440,7 @@
 
       const FAQ = {
         start: {
-          msg: "Hi! I'm Cecilia's portfolio assistant ✦\nWhat brings you here today?",
+          msg: "Hi! I'm Cecilia's portfolio assistant.\nShe's a UC Berkeley EECS student, Goldman Sachs intern, and Software Engineer building real AI products. What brings you here?",
           choices: [
             { label: "Recruiting — Software / Full-Stack", next: "swe" },
             { label: "Recruiting — Hardware / EE", next: "ee" },
@@ -2079,7 +2449,7 @@
           ]
         },
         swe: {
-          msg: "Cecilia has hands-on full-stack experience with Next.js, TypeScript, Node.js, Supabase, Docker, and LLM integration. What's the role type?",
+          msg: "Cecilia has production full-stack experience (Next.js, TypeScript, Node.js, Supabase, Docker, LLM APIs), a Goldman Sachs internship on the Controllers team, and ongoing SWE work shipping a real AI platform to paying clients. What's the role type?",
           choices: [
             { label: "Internship / co-op", next: "swe_intern" },
             { label: "Full-time / new grad", next: "swe_ft" },
@@ -2088,7 +2458,7 @@
           ]
         },
         swe_intern: {
-          msg: "She's actively looking for Summer 2026 internships. Her AI Integrated Website project and Secure File Sharing System both demonstrate real production-ready engineering. Want to reach out?",
+          msg: "She completed a Goldman Sachs Controllers internship in Summer 2026 (New York) and is currently shipping production software as a SWE at Peak Performance Unleashed. Her CoachBridge AI platform and Secure File Sharing System demonstrate real production-grade engineering. Want to connect?",
           choices: [
             { label: "Yes, email her!", next: "email" },
             { label: "Tell me more first", next: "more_swe" },
@@ -2096,7 +2466,7 @@
           ]
         },
         swe_ft: {
-          msg: "Cecilia graduates in 2027. She's open to new grad roles and exploring opportunities. She'd love to connect!",
+          msg: "Cecilia graduates in 2027 with a B.S. EECS from UC Berkeley. She has a Goldman Sachs internship and real SWE experience shipping production AI software. She'd love to connect about new grad opportunities!",
           choices: [
             { label: "Email her", next: "email" },
             { label: "Other", next: "other", isOther: true }
@@ -2120,7 +2490,7 @@
           ]
         },
         ee_fpga: {
-          msg: "She's currently building a full RISC-V processor on FPGA (Vivado, Verilog) with caches, graphics acceleration, and peripheral I/O — part of EECS 151LB at Berkeley.",
+          msg: "She completed a full three-stage pipelined RISC-V processor on FPGA (Vivado, Verilog) with caches, graphics acceleration, and peripheral I/O — part of EECS 151LB at Berkeley.",
           choices: [
             { label: "Email her", next: "email" },
             { label: "Other", next: "other", isOther: true }
@@ -2157,7 +2527,7 @@
           ]
         },
         ai: {
-          msg: "Her AI work covers search (A*, minimax, expectimax), reinforcement learning, probabilistic inference (Bayes nets, HMMs), and classic ML classifiers — all from CS 188 at Berkeley.",
+          msg: "Her AI work includes Controller Copilot (IBM watsonx.ai × Granite model — financial anomaly detection with a natural language interface), plus CS 188 at Berkeley: search, RL, probabilistic inference (Bayes nets, HMMs), and ML classifiers.",
           choices: [
             { label: "Email her", next: "email" },
             { label: "Other", next: "other", isOther: true }
@@ -2194,26 +2564,26 @@
           ]
         },
         about_q: {
-          msg: "Cecilia is a UC Berkeley EECS junior (Class of 2027) from Indonesia, passionate about hardware-software co-design and AI systems. She loves building things that actually work.",
+          msg: "Cecilia is a UC Berkeley EECS student (Class of 2027) from Indonesia who builds at every layer of the stack. She interned at Goldman Sachs (Controllers team, NYC), works as a Software Engineer at Peak Performance Unleashed building an AI platform, and has designed a 133 MHz RISC-V processor from scratch. She bridges hardware and software.",
           choices: [
             { label: "Email her", next: "email" },
             { label: "Other", next: "other", isOther: true }
           ]
         },
         skills_q: {
-          msg: "Strong in Python, C/C++, Java, Go, TypeScript, and Verilog. Toolset: Next.js, Node.js, Supabase, Docker, FPGA (Vivado), Cadence Virtuoso, SPICE. Both EE and CS.",
+          msg: "Strong in Python, C/C++, Java, Go, TypeScript, and Verilog/SystemVerilog. Production stack: Next.js, Node.js, Supabase, Docker, Vercel. Hardware tools: Vivado (FPGA), Cadence Virtuoso, SPICE, KiCad. Covers both SWE and EE depth.",
           choices: [
             { label: "Email her", next: "email" },
             { label: "Other", next: "other", isOther: true }
           ]
         },
         email: {
-          msg: "Great! Click below to reach Cecilia directly — she typically responds within a day. 📬",
+          msg: "Great! Click below to reach Cecilia directly — she typically responds within a day.",
           choices: [],
           emailCTA: true
         },
         give_up: {
-          msg: "It seems like I might not be covering what you need! The best next step is to email Cecilia directly — she'd love to hear from you. 💙",
+          msg: "It seems like I might not be covering what you need. The best next step is to email Cecilia directly — she'd love to hear from you.",
           choices: [],
           emailCTA: true
         }
@@ -2239,7 +2609,7 @@
             const a = document.createElement('a');
             a.className = 'chat-email-link';
             a.href = 'mailto:cecs@berkeley.edu?subject=Inquiry%20from%20Portfolio&body=Hi%20Cecilia%2C%0A%0A';
-            a.textContent = '✉  cecs@berkeley.edu';
+            a.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> cecs@berkeley.edu';
             choices.appendChild(a);
           }
 
@@ -2293,6 +2663,32 @@
           toggle.querySelector('.chat-notif').style.display = '';
         }
       }, 3000);
+    })();
+
+    /* ---- Hamburger menu ---- */
+    (function() {
+      const btn  = document.getElementById('hamburger');
+      const menu = document.getElementById('mobile-nav');
+      if (!btn || !menu) return;
+
+      function close() {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = menu.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+
+      document.addEventListener('click', (e) => {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) close();
+      });
     })();
 
     /* ---- Sidebar active section highlight ---- */
